@@ -4,24 +4,14 @@ pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
+import "./interfaces/IBridge.sol";
+import "./interfaces/ILiquidityPool.sol";
+
+// TODO: perhaps we want to be multi-chain and have a mapping of chainId => bridge address instead?
 uint256 constant ETHEREUM_CHAIN_ID = 1;
 uint256 constant POLYGON_CHAIN_ID = 137;
 
-interface ICrossChain {
-    function execute(bytes memory message) external;
-}
-
-interface ILiquidityPool {
-    function getLiquidityOf(address token) external view returns (uint256);
-
-    function transferTokenTo(
-        address token,
-        address user,
-        uint256 amount
-    ) external;
-}
-
-contract Bridge {
+contract Bridge is IBridge{
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
@@ -66,39 +56,29 @@ contract Bridge {
             );
     }
 
-    /**
-     * Function that adds deposited tokens to the liquidity
-     */
-    function _bridge(IERC20 token, uint256 amount) private {
-        require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
-
-        token.transferFrom(msg.sender, address(liquidityPool), amount);
-    }
-
     function bridgeToPolygon(address token, uint256 amount)
         external
+        onlyChain(ETHEREUM_CHAIN_ID)
     {
-        // _bridge(IERC20(token), amount);
 
         polygon.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
     function bridgeToEthereum(address token, uint256 amount)
         external
+        onlyChain(POLYGON_CHAIN_ID)
     {
-        // _bridge(IERC20(token), amount);
-
         ethereum.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
-    // onlyRoot or onlyChild
+    // TODO: add access control
     function unlockBridgedToken(
         address token,
         address user,
         uint256 amount
     ) external {
         console.log("Crosschain bridge", token, user, amount);
-        console.log("Crosschain bridge", msg.sender);
+        console.log("Message data: ", msg.data);
         // uint withdrawAmount = amount;
         // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
 
