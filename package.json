@@ -1,16 +1,20 @@
 {
 	"name": "chainlink-hackathon-fall-2022",
 	"scripts": {
-		"node:ethereum": "npx hardhat node --port 10",
-		"node:polygon": "npx hardhat node --port 1370",
-		"script:deploy:local-ethereum": "npx hardhat run ./scripts/deploy-ethereum.ts --network local_ethereum",
-		"script:deploy:local-polygon": "npx hardhat run ./scripts/deploy-polygon.ts --network local_polygon"
+		"node:ethereum": "npx hardhat node --port 8545",
+		"node:polygon": "npx hardhat node --port 8546",
+		"script:local:deploy-ethereum": "npx hardhat run ./scripts/deploy-ethereum.ts --network local_ethereum",
+		"script:local:deploy-polygon": "npx hardhat run ./scripts/deploy-polygon.ts --network local_polygon",
+		"script:local:bridge-to-polygon": "npx hardhat bridge-to-polygon --network local_ethereum",
+		"script:local:bridge-to-ethereum": "npx hardhat bridge-to-ethereum --network local_polygon",
+		"bridge-oracle": "ts-node scripts/bridge-oracle.ts"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox": "^2.0.0",
 		"hardhat": "^2.12.0"
 	},
 	"dependencies": {
+		"@nomiclabs/hardhat-ethers": "^2.2.0",
 		"@openzeppelin/contracts": "^4.7.3"
 	}
 }

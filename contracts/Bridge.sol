@@ -98,6 +98,7 @@ contract Bridge {
         uint256 amount
     ) external {
         console.log("Crosschain bridge", token, user, amount);
+        console.log("Crosschain bridge", msg.sender);
         // uint withdrawAmount = amount;
         // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
 
