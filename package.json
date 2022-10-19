@@ -1,5 +1,11 @@
 {
 	"name": "chainlink-hackathon-fall-2022",
+	"scripts": {
+		"node:ethereum": "npx hardhat node --port 10",
+		"node:polygon": "npx hardhat node --port 1370",
+		"script:deploy:local-ethereum": "npx hardhat run ./scripts/deploy-ethereum.ts --network local_ethereum",
+		"script:deploy:local-polygon": "npx hardhat run ./scripts/deploy-polygon.ts --network local_polygon"
+	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox": "^2.0.0",
 		"hardhat": "^2.12.0"

@@ -99,15 +99,16 @@ contract Bridge {
         address user,
         uint256 amount
     ) external {
-        uint256 withdrawAmount = amount;
-        uint256 tokenLiquidity = liquidityPool.getLiquidityOf(token);
+        console.log("Crosschain bridge", token, user, amount);
+        // uint withdrawAmount = amount;
+        // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
 
-        if (tokenLiquidity <= amount) {
-            withdrawAmount = tokenLiquidity;
-        }
+        // if (tokenLiquidity <= amount) {
+        //     withdrawAmount = tokenLiquidity;
+        // }
 
-        withdrawable[user][token] += amount - withdrawAmount;
-        liquidityPool.transferTokenTo(token, user, withdrawAmount);
+        // withdrawable[user][token] += amount - withdrawAmount;
+        // liquidityPool.transferTokenTo(token, user, withdrawAmount);
         // rewards???
     }
 }
