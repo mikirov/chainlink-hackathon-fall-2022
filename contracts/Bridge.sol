@@ -77,18 +77,16 @@ contract Bridge {
 
     function bridgeToPolygon(address token, uint256 amount)
         external
-        onlyChain(ETHEREUM_CHAIN_ID)
     {
-        _bridge(IERC20(token), amount);
+        // _bridge(IERC20(token), amount);
 
         polygon.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
     function bridgeToEthereum(address token, uint256 amount)
         external
-        onlyChain(POLYGON_CHAIN_ID)
     {
-        _bridge(IERC20(token), amount);
+        // _bridge(IERC20(token), amount);
 
         ethereum.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
