@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
 import "./interfaces/ILiquidityPool.sol";
+import "./interfaces/ICrossChain.sol";
 
 // TODO: perhaps we want to be multi-chain and have a mapping of chainId => bridge address instead?
 uint256 constant ETHEREUM_CHAIN_ID = 1;
@@ -60,7 +61,6 @@ contract Bridge is IBridge{
         external
         onlyChain(ETHEREUM_CHAIN_ID)
     {
-
         polygon.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
@@ -78,7 +78,7 @@ contract Bridge is IBridge{
         uint256 amount
     ) external {
         console.log("Crosschain bridge", token, user, amount);
-        console.log("Message data: ", msg.data);
+        // console.log("Message data: ", msg.data);
         // uint withdrawAmount = amount;
         // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
 
