@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "../interfaces/ICrossChain.sol";
-
-contract Crosschain is ICrossChain {
+contract Crosschain {
     address public bridge;
 
     event MessageSent(bytes);
