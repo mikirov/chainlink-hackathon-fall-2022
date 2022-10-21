@@ -9,7 +9,7 @@ async function main() {
 
 	await rootTunnel.deployed();
 
-	const bridge = await Bridge.deploy(ethers.constants.AddressZero, rootTunnel.address);
+	const bridge = await Bridge.deploy(rootTunnel.address, process.env.SALT);
 
 	await bridge.deployed();
 
@@ -19,6 +19,8 @@ async function main() {
 	console.log(`Deployed to Ethereum`);
 	console.log(`RootTunnel ${rootTunnel.address}`);
 	console.log(`Bridge ${bridge.address}`);
+
+	console.log("Liquidity pool address: ", await bridge.liquidityPool());
 }
 
 // We recommend this pattern to be able to use async/await everywhere

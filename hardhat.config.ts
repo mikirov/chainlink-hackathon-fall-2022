@@ -4,6 +4,11 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-interface-generator";
 import { ethers } from "ethers";
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(
   async (args, hre) => {
     const bridgeAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";

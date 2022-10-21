@@ -10,8 +10,7 @@ async function main() {
   await childTunnel.deployed();
 
   const bridge = await Bridge.deploy(
-    ethers.constants.AddressZero,
-    childTunnel.address
+    childTunnel.address, process.env.SALT
   );
 
   await bridge.deployed();
@@ -22,6 +21,8 @@ async function main() {
   console.log(`Deployed to Polygon`);
   console.log(`ChildTunnel ${childTunnel.address}`);
   console.log(`Bridge ${bridge.address}`);
+
+  console.log("Liquidity pool address: ", await bridge.liquidityPool());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
