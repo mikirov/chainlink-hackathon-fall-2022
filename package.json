@@ -7,6 +7,8 @@
 		"local:deploy-polygon": "npx hardhat run ./scripts/test/deploy-polygon.ts --network local_polygon",
 		"local:bridge-to-polygon": "npx hardhat bridge-to-polygon --network local_ethereum",
 		"local:bridge-to-ethereum": "npx hardhat bridge-to-ethereum --network local_polygon",
+		"local:withdrawable-ethereum": "npx hardhat get-bridged-balance --network local_ethereum",
+		"local:withdrawable-polygon": "npx hardhat get-bridged-balance --network local_polygon",
 		"bridge-oracle": "ts-node scripts/test/bridge-oracle.ts",
 		"generate-proof": "ts-node scripts/test/generate-proof.ts",
 		"remix": "remixd -s . -u https://remix.ethereum.org"
