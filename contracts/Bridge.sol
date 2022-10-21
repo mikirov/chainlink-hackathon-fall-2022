@@ -1,21 +1,35 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
-import "./interfaces/ILiquidityPool.sol";
 import "./CrossChain.sol";
+import "./interfaces/IERC20.sol";
+import "./LiquidityPool.sol";
 
 contract Bridge is IBridge, CrossChain {
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
-    ILiquidityPool public liquidityPool;
+    LiquidityPool public liquidityPool;
 
-    constructor(address _liquidityPool, address _tunnel) CrossChain(_tunnel) {
-        liquidityPool = ILiquidityPool(_liquidityPool);
+    constructor(
+        address _tunnel,
+        bytes32 salt
+    ) CrossChain(_tunnel){
+        liquidityPool = new LiquidityPool{salt: salt}(msg.sender, address(this));
+    }
+
+    modifier onlyChain(uint256 chainId) {
+        uint256 current;
+
+        assembly {
+            current := chainid()
+        }
+
+        require(current == chainId, "Not available on this chain");
+        _;
     }
 
     function _unlockBridgedTokenRequest(

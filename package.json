@@ -15,7 +15,10 @@
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox": "^2.0.0",
-		"hardhat": "^2.12.0"
+		"@openzeppelin/contracts": "^4.7.3",
+		"ethers": "^5.7.2",
+		"hardhat": "^2.12.0",
+		"typescript": "^4.8.4"
 	},
 	"dependencies": {
 		"@maticnetwork/maticjs": "^3.5.0",
@@ -25,6 +28,8 @@
 		"@openzeppelin/contracts": "^4.7.3",
 		"@remix-project/remixd": "^0.6.7",
 		"dotenv": "^16.0.3",
-		"fx-portal": "^1.0.3"
+		"fx-portal": "^1.0.3",
+		"hardhat-interface-generator": "^0.0.6"
 	}
 }
+

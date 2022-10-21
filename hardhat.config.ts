@@ -1,6 +1,13 @@
-import "@nomicfoundation/hardhat-toolbox";
 import { HardhatUserConfig, task } from "hardhat/config";
+
+import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-interface-generator";
 import { ethers } from "ethers";
+
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(
   async (args, hre) => {
