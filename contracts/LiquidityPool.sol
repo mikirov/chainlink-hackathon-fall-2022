@@ -95,14 +95,6 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
         emit Deposit(depositor, tokenAddress, amount);
     }
 
-    function addToFunds(
-        address token,
-        address user,
-        uint256 amount
-    ) public onlyRole(BRIDGE_ROLE){
-        userFunds[user][token] += amount;
-    }
-
     /// @notice method that withdraws tokens from the liquidity pool
     /// @dev this method is not meant to be called by EOA
     /// the reentrancy guard can be removed to save some gas since we are following
@@ -147,6 +139,14 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
         require(success);
 
         emit Unlock(msg.sender, tokenAddress, amount);
+    }
+
+    function addToFunds(
+        address token,
+        address user,
+        uint256 amount
+    ) public onlyRole(BRIDGE_ROLE) whenNotPaused{
+        userFunds[user][token] += amount;
     }
 
     /// @notice emergency pause method that can be called by the owner
