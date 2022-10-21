@@ -2,6 +2,7 @@
 pragma solidity ^0.8.16;
 
 import {FxBaseChildTunnel} from "fx-portal/contracts/tunnel/FxBaseChildTunnel.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "../interfaces/IMessageReceiver.sol";
 import "../interfaces/IMessageSender.sol";
@@ -9,7 +10,7 @@ import "../interfaces/IMessageSender.sol";
 address constant MUMBAI_FX_CHILD = 0xCf73231F28B7331BBe3124B907840A94851f9f11;
 address constant MAINNET_FX_CHILD = 0x8397259c983751DAf40400790063935a11afa28a;
 
-contract ChildTunnel is FxBaseChildTunnel, IMessageSender {
+contract ChildTunnel is FxBaseChildTunnel, IMessageSender, Ownable {
     uint256 public latestStateId;
     address public latestRootMessageSender;
     bytes public latestData;
@@ -23,7 +24,7 @@ contract ChildTunnel is FxBaseChildTunnel, IMessageSender {
 
     constructor() FxBaseChildTunnel(MUMBAI_FX_CHILD) {}
 
-    function setParent(IMessageReceiver _parent) external {
+    function setParent(IMessageReceiver _parent) external onlyOwner {
         parent = _parent;
     }
 
