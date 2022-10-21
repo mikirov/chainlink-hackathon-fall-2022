@@ -5,6 +5,7 @@ import "fx-portal/contracts/lib/Address.sol";
 
 import "./interfaces/IMessageReceiver.sol";
 import "./interfaces/IMessageSender.sol";
+import "hardhat/console.sol";
 
 contract CrossChain is IMessageReceiver {
     IMessageSender public tunnel;
@@ -20,6 +21,7 @@ contract CrossChain is IMessageReceiver {
 
     /// @notice send requests to other chain
     function _sendMessage(bytes memory message) internal {
+        console.log("_sendMessage", message.length);
         tunnel.sendMessage(message);
     }
 

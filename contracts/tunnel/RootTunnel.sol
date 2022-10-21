@@ -32,7 +32,7 @@ contract RootTunnel is FxBaseRootTunnel, IMessageSender {
         parent.receiveMessage(data);
     }
 
-    function sendMessage(bytes memory message) external onlyParent {
+    function sendMessage(bytes memory message) external virtual onlyParent {
         _sendMessageToChild(message);
     }
 }
