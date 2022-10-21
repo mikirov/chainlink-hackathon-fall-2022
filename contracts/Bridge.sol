@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
-import "./interfaces/ILiquidityPool.sol";
 import "./interfaces/ICrossChain.sol";
+import "./interfaces/IERC20.sol";
+import "./LiquidityPool.sol";
 
 // TODO: perhaps we want to be multi-chain and have a mapping of chainId => bridge address instead?
 uint256 constant ETHEREUM_CHAIN_ID = 1;
@@ -16,18 +16,18 @@ contract Bridge is IBridge{
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
-    ILiquidityPool public liquidityPool;
+    LiquidityPool public liquidityPool;
     // address of the Root contract
     ICrossChain public ethereum;
     // address of the Child contract
     ICrossChain public polygon;
 
     constructor(
-        address _liquidityPool,
         address _ethereum,
-        address _polygon
+        address _polygon,
+        bytes32 salt
     ) {
-        liquidityPool = ILiquidityPool(_liquidityPool);
+        liquidityPool = new LiquidityPool{salt: salt}(msg.sender, address(this));
         ethereum = ICrossChain(_ethereum);
         polygon = ICrossChain(_polygon);
     }

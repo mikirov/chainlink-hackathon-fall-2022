@@ -1,5 +1,7 @@
-import "@nomicfoundation/hardhat-toolbox";
 import { HardhatUserConfig, task } from "hardhat/config";
+
+import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-interface-generator";
 
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(async (args, hre) => {
 	const ethereumBridgeAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";

@@ -2,11 +2,13 @@
 pragma solidity ^0.8.16;
 
 import "./interfaces/ILiquidityPool.sol";
-import "@oppenzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IERC20.sol";
+import "./interfaces/IERC20Permit.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract LiquidityPool is ILiquidityPool, ReentrancyGuard, Ownable, Pausable {
+contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausable {
     
     /// @notice token to total volume mapping
     mapping(address => uint256) public totalLiquidity;
@@ -14,12 +16,22 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, Ownable, Pausable {
     /// @notice user to token to balance mapping
     mapping(address => mapping(address => uint256)) public userLiquidity;
 
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
+
     error DoesNotSupportPermit(address token);
     error DoesNotSupportERC20(address token);
-    error NotEnoughAllowance(address token, uint256 amount);
+    error NotEnoughAllowance(uint256 expected, uint256 actual);
+    error NotEnoughFunds(uint256 expected, uint256 actual);
 
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Unlock(address indexed user, address indexed token, uint256 amount);
+
+    constructor(address owner, address bridge) {
+        _grantRole(DEFAULT_ADMIN_ROLE, owner);
+        _grantRole(PAUSER_ROLE, owner);
+        _setupRole(BRIDGE_ROLE, bridge);
+    }
 
     function getTotalLiquidity(address token)
         external
@@ -46,35 +58,38 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, Ownable, Pausable {
         bytes32 r,
         bytes32 s
     ) external {
-        /// @dev make sure the depositor actually has the funds to deposit
-        if(token.balanceOf(msg.sender) < amount) 
-            revert NotEnoughFunds(amount, token.balanceOf(msg.sender));
-        
-        if(!token.supportsInterface(type(IERC20Permit).interfaceId))
+        if(!IERC165(token).supportsInterface(type(IERC20Permit).interfaceId))
             revert DoesNotSupportPermit(token);
 
         IERC20Permit(token).permit(msg.sender, address(this), amount, deadline, v, r, s);
         _deposit(token, amount, msg.sender);
     }
 
-    function deposit(address token, amount) external {
-       _deposit(token, amount, msg.sender);
+    function deposit(address tokenAddress, uint256 amount) external {
+       _deposit(tokenAddress, amount, msg.sender);
     }
 
-    function _deposit(address token, uint256 amount, address depositor) internal {
-        if(!token.supportsInterface(type(IERC20).interfaceId))
-            revert DoesNotSupportERC20(token);
+    function _deposit(address tokenAddress, uint256 amount, address depositor) internal {
+        if(!IERC165(tokenAddress).supportsInterface(type(IERC20).interfaceId))
+            revert DoesNotSupportERC20(tokenAddress);
         
+        IERC20 token = IERC20(tokenAddress);
+
+        /// @dev make sure the depositor actually has the funds to deposit
+        if(token.balanceOf(msg.sender) < amount) 
+            revert NotEnoughFunds(amount, token.balanceOf(msg.sender));
+        
+
         if(token.allowance(depositor, address(this)) < amount)
             revert NotEnoughAllowance(amount, token.allowance(depositor, address(this)));
 
         bool success = token.transferFrom(depositor, address(this), amount);
         require(success);
 
-        totalLiquidity[token] += amount;
-        userLiquidity[depositor][token] += amount;
+        totalLiquidity[tokenAddress] += amount;
+        userLiquidity[depositor][tokenAddress] += amount;
 
-        emit Deposit(depositor, token, amount);
+        emit Deposit(depositor, tokenAddress, amount);
     }
 
     /// @notice method that withdraws tokens from the liquidity pool
@@ -93,23 +108,27 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, Ownable, Pausable {
     /// @notice unlock specified amount of token from the liquidity pool to the user address on the target chain
     /// method is meant to be called by the bridge contract
     function unlockTokenTo(
-        address token,
+        address tokenAddress,
         address user,
         uint256 amount
-    ) public onlyOwner whenNotPaused {
-        if(totalLiquidity[token] < amount)
-            revert NotEnoughFunds(amount, totalLiquidity[token]);
+    ) public onlyRole(BRIDGE_ROLE) whenNotPaused {
+        if(totalLiquidity[tokenAddress] < amount)
+            revert NotEnoughFunds(amount, totalLiquidity[tokenAddress]);
 
-        totalLiquidity[token] -= amount;
+        totalLiquidity[tokenAddress] -= amount;
 
-        bool success = token.transfer(user, amount);
+        bool success = IERC20(tokenAddress).transfer(user, amount);
         require(success);
 
-        emit Unlock(msg.sender, token, amount);
+        emit Unlock(msg.sender, tokenAddress, amount);
     }
 
     /// @notice emergency pause method that can be called by the owner
-    function pause() external onlyOwner {
+    function pause() external whenNotPaused onlyRole(PAUSER_ROLE) {
         _pause();
+    }
+
+    function unpause() external whenPaused onlyRole(PAUSER_ROLE) {
+        _unpause();
     }
 }
