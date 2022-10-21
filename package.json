@@ -3,11 +3,15 @@
 	"scripts": {
 		"node:ethereum": "npx hardhat node --port 8545",
 		"node:polygon": "npx hardhat node --port 8546",
-		"script:local:deploy-ethereum": "npx hardhat run ./scripts/deploy-ethereum.ts --network local_ethereum",
-		"script:local:deploy-polygon": "npx hardhat run ./scripts/deploy-polygon.ts --network local_polygon",
-		"script:local:bridge-to-polygon": "npx hardhat bridge-to-polygon --network local_ethereum",
-		"script:local:bridge-to-ethereum": "npx hardhat bridge-to-ethereum --network local_polygon",
-		"bridge-oracle": "ts-node scripts/bridge-oracle.ts"
+		"local:deploy-ethereum": "npx hardhat run ./scripts/test/deploy-ethereum.ts --network local_ethereum",
+		"local:deploy-polygon": "npx hardhat run ./scripts/test/deploy-polygon.ts --network local_polygon",
+		"local:bridge-to-polygon": "npx hardhat bridge-to-polygon --network local_ethereum",
+		"local:bridge-to-ethereum": "npx hardhat bridge-to-ethereum --network local_polygon",
+		"local:withdrawable-ethereum": "npx hardhat get-bridged-balance --network local_ethereum",
+		"local:withdrawable-polygon": "npx hardhat get-bridged-balance --network local_polygon",
+		"bridge-oracle": "ts-node scripts/test/bridge-oracle.ts",
+		"generate-proof": "ts-node scripts/test/generate-proof.ts",
+		"remix": "remixd -s . -u https://remix.ethereum.org"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -17,6 +21,15 @@
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
+		"@maticnetwork/maticjs": "^3.5.0",
+		"@maticnetwork/maticjs-ethers": "^1.0.2",
+		"@maticnetwork/maticjs-web3": "^1.0.2",
+		"@nomiclabs/hardhat-ethers": "^2.2.0",
+		"@openzeppelin/contracts": "^4.7.3",
+		"@remix-project/remixd": "^0.6.7",
+		"dotenv": "^16.0.3",
+		"fx-portal": "^1.0.3",
 		"hardhat-interface-generator": "^0.0.6"
 	}
 }
+
