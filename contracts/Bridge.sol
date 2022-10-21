@@ -6,41 +6,16 @@ import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
 import "./interfaces/ILiquidityPool.sol";
-import "./interfaces/ICrossChain.sol";
+import "./CrossChain.sol";
 
-// TODO: perhaps we want to be multi-chain and have a mapping of chainId => bridge address instead?
-uint256 constant ETHEREUM_CHAIN_ID = 1;
-uint256 constant POLYGON_CHAIN_ID = 137;
-
-contract Bridge is IBridge{
+contract Bridge is IBridge, CrossChain {
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
     ILiquidityPool public liquidityPool;
-    // address of the Root contract
-    ICrossChain public ethereum;
-    // address of the Child contract
-    ICrossChain public polygon;
 
-    constructor(
-        address _liquidityPool,
-        address _ethereum,
-        address _polygon
-    ) {
+    constructor(address _liquidityPool, address _tunnel) CrossChain(_tunnel) {
         liquidityPool = ILiquidityPool(_liquidityPool);
-        ethereum = ICrossChain(_ethereum);
-        polygon = ICrossChain(_polygon);
-    }
-
-    modifier onlyChain(uint256 chainId) {
-        uint256 current;
-
-        assembly {
-            current := chainid()
-        }
-
-        require(current == chainId, "Not available on this chain");
-        _;
     }
 
     function _unlockBridgedTokenRequest(
@@ -57,27 +32,23 @@ contract Bridge is IBridge{
             );
     }
 
-    function bridgeToPolygon(address token, uint256 amount)
-        external
-        onlyChain(ETHEREUM_CHAIN_ID)
-    {
-        polygon.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
+    function bridgeToken(address token, uint256 amount) external {
+        // Deposit ERC20 to the bridge / LP
+
+        _sendMessage(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
-    function bridgeToEthereum(address token, uint256 amount)
-        external
-        onlyChain(POLYGON_CHAIN_ID)
-    {
-        ethereum.execute(_unlockBridgedTokenRequest(token, msg.sender, amount));
-    }
-
-    // TODO: add access control
+    /**
+     * Below functions are called from the Tunnel on the other chain.
+     * They must be public/external
+     */
     function unlockBridgedToken(
         address token,
         address user,
         uint256 amount
-    ) external {
-        console.log("Crosschain bridge", token, user, amount);
+    ) public onlyTunnel {
+        withdrawable[user][token] = amount;
+        // console.log("Crosschain bridge", token, user, amount);
         // console.log("Message data: ", msg.data);
         // uint withdrawAmount = amount;
         // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
