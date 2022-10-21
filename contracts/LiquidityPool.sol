@@ -14,10 +14,13 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
     mapping(address => uint256) public totalLiquidity;
 
     /// @notice user to token to balance mapping
-    mapping(address => mapping(address => uint256)) public userLiquidity;
+    mapping(address => mapping(address => uint256)) public providerLiquidity;
+
+    mapping(address => mapping(address => uint256)) public userFunds;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
+    bytes32 public constant LP_PROVIDER_ROLE = keccak256("LP_PROVIDER_ROLE");
 
     error DoesNotSupportPermit(address token);
     error DoesNotSupportERC20(address token);
@@ -46,7 +49,7 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
         view
         returns (uint256)
     {
-        return userLiquidity[user][token];
+        return userFunds[user][token];
     }
 
     /// @notice function that permits and deposits an ERC20 token to the contract
@@ -87,22 +90,44 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
         require(success);
 
         totalLiquidity[tokenAddress] += amount;
-        userLiquidity[depositor][tokenAddress] += amount;
+        providerLiquidity[depositor][tokenAddress] += amount;
 
         emit Deposit(depositor, tokenAddress, amount);
+    }
+
+    function addToFunds(
+        address token,
+        address user,
+        uint256 amount
+    ) public onlyRole(BRIDGE_ROLE){
+        userFunds[user][token] += amount;
     }
 
     /// @notice method that withdraws tokens from the liquidity pool
     /// @dev this method is not meant to be called by EOA
     /// the reentrancy guard can be removed to save some gas since we are following
     /// the check-effects-interactions pattern
-    function withdraw(address token, uint256 amount) external nonReentrant whenNotPaused {
-        if(userLiquidity[msg.sender][token] < amount)
-            revert NotEnoughFunds(amount, userLiquidity[msg.sender][token]);
+    function withdrawLiquidity(address token, uint256 amount) external nonReentrant whenNotPaused onlyRole(LP_PROVIDER_ROLE) {
+        if(providerLiquidity[msg.sender][token] < amount)
+            revert NotEnoughFunds(amount, providerLiquidity[msg.sender][token]);
 
-        userLiquidity[msg.sender][token] -= amount;
+        providerLiquidity[msg.sender][token] -= amount;
 
         unlockTokenTo(token, msg.sender, amount);
+    }
+
+        /// @notice method that withdraws tokens from the liquidity pool
+    /// @dev this method is not meant to be called by EOA
+    /// the reentrancy guard can be removed to save some gas since we are following
+    /// the check-effects-interactions pattern
+    function withdrawFunds(address token, uint256 amount) external nonReentrant whenNotPaused {
+        if(userFunds[msg.sender][token] < amount)
+            revert NotEnoughFunds(amount, userFunds[msg.sender][token]);
+
+        userFunds[msg.sender][token] -= amount;
+
+        bool success = IERC20(token).transfer(msg.sender, amount);
+        require(success);
     }
 
     /// @notice unlock specified amount of token from the liquidity pool to the user address on the target chain
@@ -112,6 +137,7 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
         address user,
         uint256 amount
     ) public onlyRole(BRIDGE_ROLE) whenNotPaused {
+        /// @dev if there is not enough liquidity but the user still attempts to bridge, save them 
         if(totalLiquidity[tokenAddress] < amount)
             revert NotEnoughFunds(amount, totalLiquidity[tokenAddress]);
 

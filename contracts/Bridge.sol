@@ -61,18 +61,8 @@ contract Bridge is IBridge, CrossChain {
         address user,
         uint256 amount
     ) public onlyTunnel {
-        withdrawable[user][token] = amount;
-        // console.log("Crosschain bridge", token, user, amount);
-        // console.log("Message data: ", msg.data);
-        // uint withdrawAmount = amount;
-        // uint tokenLiquidity = liquidityPool.getLiquidityOf(token);
-
-        // if (tokenLiquidity <= amount) {
-        //     withdrawAmount = tokenLiquidity;
-        // }
-
-        // withdrawable[user][token] += amount - withdrawAmount;
-        // liquidityPool.transferTokenTo(token, user, withdrawAmount);
-        // rewards???
+        try liquidityPool.unlockTokenTo(token, user, amount){} catch {
+            liquidityPool.addToFunds(token, user, amount);
+        } 
     }
 }
