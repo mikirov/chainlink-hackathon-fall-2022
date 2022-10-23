@@ -4,32 +4,27 @@ pragma solidity ^0.8.16;
 import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
-import "./CrossChain.sol";
 import "./interfaces/IERC20.sol";
-import "./LiquidityPool.sol";
+import "./interfaces/ILiquidityPool.sol";
 
-contract Bridge is IBridge, CrossChain {
+import "./CrossChainUpgradable.sol";
+
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "hardhat/console.sol";
+
+contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
-    LiquidityPool public liquidityPool;
+    ILiquidityPool public liquidityPool;
 
-    constructor(
+    function initialize(
         address _tunnel,
-        bytes32 salt
-    ) CrossChain(_tunnel){
-        liquidityPool = new LiquidityPool{salt: salt}(msg.sender, address(this));
-    }
-
-    modifier onlyChain(uint256 chainId) {
-        uint256 current;
-
-        assembly {
-            current := chainid()
-        }
-
-        require(current == chainId, "Not available on this chain");
-        _;
+        address _liquidityPool
+    ) public initializer{
+        __CrossChain_init(_tunnel);
+        __Ownable_init();
+        liquidityPool = ILiquidityPool(_liquidityPool);
     }
 
     function _unlockBridgedTokenRequest(

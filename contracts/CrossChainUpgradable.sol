@@ -7,7 +7,9 @@ import "./interfaces/IMessageReceiver.sol";
 import "./interfaces/IMessageSender.sol";
 import "hardhat/console.sol";
 
-contract CrossChain is IMessageReceiver {
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
+contract CrossChainUpgradable is Initializable, IMessageReceiver {
     IMessageSender public tunnel;
 
     modifier onlyTunnel() {
@@ -15,9 +17,11 @@ contract CrossChain is IMessageReceiver {
         _;
     }
 
-    constructor(address _tunnel) {
+    function __CrossChain_init(address _tunnel) internal onlyInitializing
+    {
         tunnel = IMessageSender(_tunnel);
     }
+
 
     /// @notice send requests to other chain
     function _sendMessage(bytes memory message) internal {

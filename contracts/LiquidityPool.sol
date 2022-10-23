@@ -30,12 +30,15 @@ contract LiquidityPool is ILiquidityPool, ReentrancyGuard, AccessControl, Pausab
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Unlock(address indexed user, address indexed token, uint256 amount);
 
-    constructor(address owner, address bridge) {
+    constructor(address owner) {
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
         _grantRole(PAUSER_ROLE, owner);
-        _setupRole(BRIDGE_ROLE, bridge);
     }
 
+    function setBridge(address bridge) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _grantRole(BRIDGE_ROLE, bridge);
+    }
+    
     function getTotalLiquidity(address token)
         external
         view

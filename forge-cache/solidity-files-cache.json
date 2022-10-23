@@ -1,0 +1,1928 @@
+{
+  "_format": "ethers-rs-sol-cache-3",
+  "paths": {
+    "artifacts": "out",
+    "build_infos": "out/build-info",
+    "sources": "contracts",
+    "tests": "test",
+    "scripts": "script",
+    "libraries": [
+      "lib",
+      "node_modules"
+    ]
+  },
+  "files": {
+    "contracts/Bridge.sol": {
+      "lastModificationDate": 1666366753541,
+      "contentHash": "c926a1b7516221af0445d7fd05c74285",
+      "sourceName": "contracts/Bridge.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/CrossChainUpgradable.sol",
+        "contracts/interfaces/IBridge.sol",
+        "contracts/interfaces/IERC20.sol",
+        "contracts/interfaces/ILiquidityPool.sol",
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+        "node_modules/fx-portal/contracts/lib/Address.sol",
+        "node_modules/hardhat/console.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "Bridge": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Bridge.sol/Bridge.json"
+        }
+      }
+    },
+    "contracts/CrossChainUpgradable.sol": {
+      "lastModificationDate": 1666363978179,
+      "contentHash": "c1ed008fd13569d5778d502c8fb6b15e",
+      "sourceName": "contracts/CrossChainUpgradable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+        "node_modules/fx-portal/contracts/lib/Address.sol",
+        "node_modules/hardhat/console.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "CrossChainUpgradable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "CrossChainUpgradable.sol/CrossChainUpgradable.json"
+        }
+      }
+    },
+    "contracts/LiquidityPool.sol": {
+      "lastModificationDate": 1666366443179,
+      "contentHash": "4bcb49c52c9ddf376ac0e662973a9620",
+      "sourceName": "contracts/LiquidityPool.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IERC20.sol",
+        "contracts/interfaces/IERC20Permit.sol",
+        "contracts/interfaces/ILiquidityPool.sol",
+        "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/security/Pausable.sol",
+        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "LiquidityPool": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "LiquidityPool.sol/LiquidityPool.json"
+        }
+      }
+    },
+    "contracts/console.sol": {
+      "lastModificationDate": 1666458186099,
+      "contentHash": "100b8a33b917da1147740d7ab8b0ded3",
+      "sourceName": "contracts/console.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.4.22, <0.9.0",
+      "artifacts": {
+        "console": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "console.sol/console.json"
+        }
+      }
+    },
+    "contracts/interfaces/IBridge.sol": {
+      "lastModificationDate": 1666351368487,
+      "contentHash": "e058feac6b0826f5a608482da3eb623b",
+      "sourceName": "contracts/interfaces/IBridge.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": null,
+      "artifacts": {
+        "IBridge": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IBridge.sol/IBridge.json"
+        }
+      }
+    },
+    "contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1666363087240,
+      "contentHash": "0fb8a98c0dcbb3f0f693ed5e24e0f32f",
+      "sourceName": "contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IERC165": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IERC165.sol/IERC165.json"
+        }
+      }
+    },
+    "contracts/interfaces/IERC20.sol": {
+      "lastModificationDate": 1666363087241,
+      "contentHash": "020f718826122fba2f2c83ff2b7cb2cd",
+      "sourceName": "contracts/interfaces/IERC20.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IERC20": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IERC20.sol/IERC20.json"
+        }
+      }
+    },
+    "contracts/interfaces/IERC20Permit.sol": {
+      "lastModificationDate": 1666363087241,
+      "contentHash": "8167da645f35d234d6aa5461d3286c7d",
+      "sourceName": "contracts/interfaces/IERC20Permit.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IERC20.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IERC20Permit": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IERC20Permit.sol/IERC20Permit.json"
+        }
+      }
+    },
+    "contracts/interfaces/ILiquidityPool.sol": {
+      "lastModificationDate": 1666363087241,
+      "contentHash": "c9b53bb1297244218c2a776d63add716",
+      "sourceName": "contracts/interfaces/ILiquidityPool.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": null,
+      "artifacts": {
+        "ILiquidityPool": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ILiquidityPool.sol/ILiquidityPool.0.8.17.json"
+        }
+      }
+    },
+    "contracts/interfaces/IMessageReceiver.sol": {
+      "lastModificationDate": 1666351368488,
+      "contentHash": "2ef2fd1b40647000767dc2c937c01121",
+      "sourceName": "contracts/interfaces/IMessageReceiver.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "IMessageReceiver": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IMessageReceiver.sol/IMessageReceiver.json"
+        }
+      }
+    },
+    "contracts/interfaces/IMessageSender.sol": {
+      "lastModificationDate": 1666351368489,
+      "contentHash": "5218d7d9b11f6870d8e646d2d43ae3e4",
+      "sourceName": "contracts/interfaces/IMessageSender.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "IMessageSender": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IMessageSender.sol/IMessageSender.json"
+        }
+      }
+    },
+    "contracts/test/ChildTunnelPublic.sol": {
+      "lastModificationDate": 1666351368489,
+      "contentHash": "470fb885a54325c22d2b98d808071cac",
+      "sourceName": "contracts/test/ChildTunnelPublic.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "contracts/tunnel/ChildTunnel.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "ChildTunnelPublic": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ChildTunnelPublic.sol/ChildTunnelPublic.json"
+        }
+      }
+    },
+    "contracts/test/RootTunnelPublic.sol": {
+      "lastModificationDate": 1666351368489,
+      "contentHash": "bdea910ccd6506afeec561a49343e877",
+      "sourceName": "contracts/test/RootTunnelPublic.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IBridge.sol",
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "contracts/tunnel/RootTunnel.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol",
+        "node_modules/fx-portal/contracts/lib/Merkle.sol",
+        "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol",
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "RootTunnelPublic": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "RootTunnelPublic.sol/RootTunnelPublic.json"
+        }
+      }
+    },
+    "contracts/tunnel/ChildTunnel.sol": {
+      "lastModificationDate": 1666351368492,
+      "contentHash": "0cb40afc7d362d0dac03b2452f7b2f2c",
+      "sourceName": "contracts/tunnel/ChildTunnel.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "ChildTunnel": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ChildTunnel.sol/ChildTunnel.json"
+        }
+      }
+    },
+    "contracts/tunnel/RootTunnel.sol": {
+      "lastModificationDate": 1666351368496,
+      "contentHash": "39dab1ee0f02459e941d1fd43aebb2b7",
+      "sourceName": "contracts/tunnel/RootTunnel.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/interfaces/IBridge.sol",
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol",
+        "node_modules/fx-portal/contracts/lib/Merkle.sol",
+        "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol",
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol"
+      ],
+      "versionRequirement": "^0.8.16",
+      "artifacts": {
+        "RootTunnel": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "RootTunnel.sol/RootTunnel.json"
+        }
+      }
+    },
+    "lib/forge-std/lib/ds-test/src/test.sol": {
+      "lastModificationDate": 1666456887836,
+      "contentHash": "962996f0e05d5218857a538a62d7c47e",
+      "sourceName": "lib/forge-std/lib/ds-test/src/test.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.5.0",
+      "artifacts": {
+        "DSTest": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "test.sol/DSTest.json"
+        }
+      }
+    },
+    "lib/forge-std/src/Script.sol": {
+      "lastModificationDate": 1666456887836,
+      "contentHash": "571dde8775a6214a03d6772ee330ead5",
+      "sourceName": "lib/forge-std/src/Script.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/forge-std/src/StdJson.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "Script": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Script.sol/Script.json"
+        }
+      }
+    },
+    "lib/forge-std/src/StdJson.sol": {
+      "lastModificationDate": 1666456887836,
+      "contentHash": "75c782f20a301ab9827060a03da071e4",
+      "sourceName": "lib/forge-std/src/StdJson.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/forge-std/src/Vm.sol"
+      ],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "stdJson": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "StdJson.sol/stdJson.json"
+        }
+      }
+    },
+    "lib/forge-std/src/Test.sol": {
+      "lastModificationDate": 1666456887837,
+      "contentHash": "6cab65c53a9548c2428a10697fd06dd1",
+      "sourceName": "lib/forge-std/src/Test.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/StdJson.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "Test": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Test.sol/Test.json"
+        },
+        "stdError": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Test.sol/stdError.json"
+        },
+        "stdMath": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Test.sol/stdMath.json"
+        },
+        "stdStorage": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Test.sol/stdStorage.json"
+        }
+      }
+    },
+    "lib/forge-std/src/Vm.sol": {
+      "lastModificationDate": 1666456887837,
+      "contentHash": "bd4bde818b3c57b21e0601277b1d2dac",
+      "sourceName": "lib/forge-std/src/Vm.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "Vm": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Vm.sol/Vm.json"
+        }
+      }
+    },
+    "lib/forge-std/src/console.sol": {
+      "lastModificationDate": 1666456887837,
+      "contentHash": "100b8a33b917da1147740d7ab8b0ded3",
+      "sourceName": "lib/forge-std/src/console.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.4.22, <0.9.0",
+      "artifacts": {
+        "console": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "console.sol/console.json"
+        }
+      }
+    },
+    "lib/forge-std/src/console2.sol": {
+      "lastModificationDate": 1666456887838,
+      "contentHash": "5df91f8e93efbfcccf68973dc1b74a70",
+      "sourceName": "lib/forge-std/src/console2.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.4.22, <0.9.0",
+      "artifacts": {
+        "console2": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "console2.sol/console2.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1666348449920,
+      "contentHash": "e6ef731d275b1e7b2995f00fa56d9dab",
+      "sourceName": "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "AccessControl": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "AccessControl.sol/AccessControl.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1666348450049,
+      "contentHash": "57c84298234411cea19c7c284d86be8b",
+      "sourceName": "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IAccessControl": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IAccessControl.sol/IAccessControl.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1666348450098,
+      "contentHash": "e436cea06129be2c73cda4b1acc848b5",
+      "sourceName": "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Ownable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Ownable.sol/Ownable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/security/Pausable.sol": {
+      "lastModificationDate": 1666348450099,
+      "contentHash": "25c8108f36fdd472bc78d4c4af240c11",
+      "sourceName": "node_modules/@openzeppelin/contracts/security/Pausable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Pausable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Pausable.sol/Pausable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1666348450107,
+      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
+      "sourceName": "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "ReentrancyGuard": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1666348449942,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "node_modules/@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Context": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Context.sol/Context.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1666348450128,
+      "contentHash": "cf46906c4035f51639a22265066a9e78",
+      "sourceName": "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Strings": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Strings.sol/Strings.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1666348450009,
+      "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
+      "sourceName": "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "ERC165": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ERC165.sol/ERC165.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1666348450060,
+      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
+      "sourceName": "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IERC165": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "introspection/IERC165.sol/IERC165.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
+      "lastModificationDate": 1666363368043,
+      "contentHash": "403ce8273abde646bff81558ddf512ad",
+      "sourceName": "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "OwnableUpgradeable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "OwnableUpgradeable.sol/OwnableUpgradeable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
+      "lastModificationDate": 1666363368042,
+      "contentHash": "2afbb3bd1e31b07461c103ef6b17fc7a",
+      "sourceName": "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol"
+      ],
+      "versionRequirement": "^0.8.2",
+      "artifacts": {
+        "Initializable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Initializable.sol/Initializable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": {
+      "lastModificationDate": 1666363368026,
+      "contentHash": "d64ce513e21812dc46640297b085cb46",
+      "sourceName": "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.1",
+      "artifacts": {
+        "AddressUpgradeable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "AddressUpgradeable.sol/AddressUpgradeable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
+      "lastModificationDate": 1666363368027,
+      "contentHash": "6200b84950eb05b4a92a39fd1d6e0f9b",
+      "sourceName": "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "ContextUpgradeable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ContextUpgradeable.sol/ContextUpgradeable.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/lib/Address.sol": {
+      "lastModificationDate": 1666352484763,
+      "contentHash": "37103cdc416efc2601c6f6734044b559",
+      "sourceName": "node_modules/fx-portal/contracts/lib/Address.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Address": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Address.sol/Address.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol": {
+      "lastModificationDate": 1666352484765,
+      "contentHash": "848aa189f431d1a8f86e9f779df97dfb",
+      "sourceName": "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "ExitPayloadReader": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ExitPayloadReader.sol/ExitPayloadReader.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/lib/Merkle.sol": {
+      "lastModificationDate": 1666352484769,
+      "contentHash": "066d735c2566241430f9fd3d97e4489f",
+      "sourceName": "node_modules/fx-portal/contracts/lib/Merkle.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Merkle": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Merkle.sol/Merkle.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol": {
+      "lastModificationDate": 1666352484769,
+      "contentHash": "49ce92b638fa09f86258d6a0d3268e2b",
+      "sourceName": "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "MerklePatriciaProof": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "MerklePatriciaProof.sol/MerklePatriciaProof.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/lib/RLPReader.sol": {
+      "lastModificationDate": 1666352484769,
+      "contentHash": "7400fa76818565f1096c0ac31762665e",
+      "sourceName": "node_modules/fx-portal/contracts/lib/RLPReader.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "RLPReader": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "RLPReader.sol/RLPReader.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol": {
+      "lastModificationDate": 1666352484765,
+      "contentHash": "14a2c2bf3a93a3e2b275f4b892df9c2c",
+      "sourceName": "node_modules/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "FxBaseChildTunnel": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "FxBaseChildTunnel.sol/FxBaseChildTunnel.json"
+        },
+        "IFxMessageProcessor": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "FxBaseChildTunnel.sol/IFxMessageProcessor.json"
+        }
+      }
+    },
+    "node_modules/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol": {
+      "lastModificationDate": 1666352484766,
+      "contentHash": "69daecdb66a7b93a1b8466a80d9cd079",
+      "sourceName": "node_modules/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol",
+        "node_modules/fx-portal/contracts/lib/Merkle.sol",
+        "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol",
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "FxBaseRootTunnel": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "FxBaseRootTunnel.sol/FxBaseRootTunnel.json"
+        },
+        "ICheckpointManager": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "FxBaseRootTunnel.sol/ICheckpointManager.json"
+        },
+        "IFxStateSender": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "FxBaseRootTunnel.sol/IFxStateSender.json"
+        }
+      }
+    },
+    "node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1666348450233,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "node_modules/hardhat/console.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": null,
+      "artifacts": {
+        "console": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "hardhat/console.sol/console.json"
+        }
+      }
+    },
+    "test/LiquidityPool.t.sol": {
+      "lastModificationDate": 1666530534614,
+      "contentHash": "789453c4a45d313ee5974a8c2d3a0516",
+      "sourceName": "test/LiquidityPool.t.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "contracts/LiquidityPool.sol",
+        "contracts/interfaces/IERC20.sol",
+        "contracts/interfaces/IERC20Permit.sol",
+        "contracts/interfaces/ILiquidityPool.sol",
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/StdJson.sol",
+        "lib/forge-std/src/Test.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/security/Pausable.sol",
+        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.10",
+      "artifacts": {
+        "LiquidityPoolTest": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "LiquidityPool.t.sol/LiquidityPoolTest.json"
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,12 @@
 import { HardhatUserConfig, task } from "hardhat/config";
-
-import "@nomicfoundation/hardhat-toolbox";
-import "hardhat-interface-generator";
 import { ethers } from "ethers";
+
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomiclabs/hardhat-ethers";
+import '@openzeppelin/hardhat-upgrades';
+import "@typechain/hardhat";
+import "hardhat-interface-generator";
+import "hardhat-deploy";
 
 import dotenv from 'dotenv';
 
