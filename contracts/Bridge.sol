@@ -6,30 +6,20 @@ import "hardhat/console.sol";
 import "./interfaces/IBridge.sol";
 import "./CrossChain.sol";
 import "./interfaces/IERC20.sol";
-import "./LiquidityPool.sol";
+import "./LiquidityManager.sol";
 
 contract Bridge is IBridge, CrossChain {
     mapping(address => mapping(address => uint256)) public withdrawable;
 
     // address of the liquidity pool
-    LiquidityPool public liquidityPool;
+    LiquidityManager public liquidityPool;
 
-    constructor(
-        address _tunnel,
-        bytes32 salt
-    ) CrossChain(_tunnel){
-        liquidityPool = new LiquidityPool{salt: salt}(msg.sender, address(this));
-    }
+    event BridgedTokenWithdrawn(uint amount);
 
-    modifier onlyChain(uint256 chainId) {
-        uint256 current;
+    error NoBridgeTokenToWithdraw();
 
-        assembly {
-            current := chainid()
-        }
-
-        require(current == chainId, "Not available on this chain");
-        _;
+    constructor(address _tunnel, address _liquidityPool) CrossChain(_tunnel) {
+        liquidityPool = LiquidityManager(liquidityPool);
     }
 
     function _unlockBridgedTokenRequest(
@@ -52,20 +42,41 @@ contract Bridge is IBridge, CrossChain {
         _sendMessage(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
+    /// @notice function that withdraws all available bridged amount for a given token held by the caller
+    function withdrawBridgedToken(address token) external {
+        uint withdrawnAmount = liquidityPool.withdrawBridgedToken(
+            msg.sender,
+            token
+        );
+
+        if (withdrawnAmount <= 0) {
+            revert NoBridgeTokenToWithdraw();
+        }
+
+        emit BridgedTokenWithdrawn(withdrawnAmount);
+    }
+
     /**
      * Below functions are called from the Tunnel on the other chain.
      * They must be public/external
      */
+
+    /// @notice function that bridges token amount for a given user between 2 chains
+    /// it tries automatically to send bridged tokens to user address
+    /// It's a cross-chain call, so atomic functionality is not possible and the transaction must not fail
+    /// otherwise the new unlocked bridge token amount will be lost
     function unlockBridgedToken(
         address token,
         address user,
         uint256 amount
     ) public onlyTunnel {
-        if(liquidityPool.totalLiquidity(token) >= amount) {
-            liquidityPool.unlockTokenTo(token, user, amount);
-        } else {
-            // If there is not enough liquidity, we add the tokens to the user's funds to receive in the future
-            liquidityPool.addToFunds(token, user, amount);
-        }
+        liquidityPool.addBridgedToken(user, token, amount);
+
+        // make sure the transaction will never revert
+        try liquidityPool.withdrawBridgedToken(user, token) returns (
+            uint amount
+        ) {
+            emit BridgedTokenWithdrawn(amount);
+        } catch {}
     }
 }
