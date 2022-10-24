@@ -4,25 +4,25 @@ async function main() {
   const [bridgeOracle] = await ethers.getSigners();
   const ChildTunnel = await ethers.getContractFactory("ChildTunnelPublic");
   const Bridge = await ethers.getContractFactory("Bridge");
+  const LiquidityPool = await ethers.getContractFactory("LiquidityPool");
 
-  const childTunnel = await ChildTunnel.deploy();
+  const rootTunnel = await ChildTunnel.deploy();
+  const liquidityPool = await LiquidityPool.deploy(bridgeOracle.address);
 
-  await childTunnel.deployed();
+  await rootTunnel.deployed();
 
-  const bridge = await Bridge.deploy(
-    childTunnel.address, process.env.SALT
-  );
+  const bridge = await Bridge.deploy(rootTunnel.address, liquidityPool.address);
 
   await bridge.deployed();
 
-  await childTunnel.setParent(bridge.address);
-  await childTunnel.setFxRootTunnel(bridgeOracle.address)
+  await rootTunnel.setParent(bridge.address);
+  await rootTunnel.setFxRootTunnel(bridgeOracle.address);
+  await liquidityPool.setBridge(bridge.address);
 
-  console.log(`Deployed to Polygon`);
-  console.log(`ChildTunnel ${childTunnel.address}`);
+  console.log(`Deployed to Ethereum`);
+  console.log(`RootTunnel ${rootTunnel.address}`);
+  console.log(`LiquidityPool ${liquidityPool.address}`);
   console.log(`Bridge ${bridge.address}`);
-
-  console.log("Liquidity pool address: ", await bridge.liquidityPool());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
