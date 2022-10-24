@@ -4,8 +4,8 @@ pragma solidity ^0.8.16;
 import "hardhat/console.sol";
 
 import "./interfaces/IBridge.sol";
-import "./interfaces/IERC20.sol";
-import "./interfaces/ILiquidityPool.sol";
+import "./CrossChain.sol";
+import "./LiquidityPool.sol";
 
 import "./CrossChainUpgradable.sol";
 
@@ -43,24 +43,45 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
 
     function bridgeToken(address token, uint256 amount) external {
         // Deposit ERC20 to the bridge / LP
-
+        
         _sendMessage(_unlockBridgedTokenRequest(token, msg.sender, amount));
+    }
+
+    /// @notice function that withdraws all available bridged amount for a given token held by the caller
+    function withdrawBridgedToken(address token) external {
+        uint withdrawnAmount = liquidityPool.withdrawBridgedToken(
+            msg.sender,
+            token
+        );
+
+        if (withdrawnAmount <= 0) {
+            revert NoBridgeTokenToWithdraw();
+        }
+
+        emit BridgedTokenWithdrawn(withdrawnAmount);
     }
 
     /**
      * Below functions are called from the Tunnel on the other chain.
      * They must be public/external
      */
+
+    /// @notice function that bridges token amount for a given user between 2 chains
+    /// it tries automatically to send bridged tokens to user address
+    /// It's a cross-chain call, so atomic functionality is not possible and the transaction must not fail
+    /// otherwise the new unlocked bridge token amount will be lost
     function unlockBridgedToken(
         address token,
         address user,
         uint256 amount
     ) public onlyTunnel {
-        if(liquidityPool.totalLiquidity(token) >= amount) {
-            liquidityPool.unlockTokenTo(token, user, amount);
-        } else {
-            // If there is not enough liquidity, we add the tokens to the user's funds to receive in the future
-            liquidityPool.addToFunds(token, user, amount);
-        }
+        liquidityPool.addBridgedToken(user, token, amount);
+
+        // make sure the transaction will never revert
+        try liquidityPool.withdrawBridgedToken(user, token) returns (
+            uint amount
+        ) {
+            emit BridgedTokenWithdrawn(amount);
+        } catch {}
     }
 }
