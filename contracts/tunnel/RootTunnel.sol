@@ -4,7 +4,6 @@ pragma solidity ^0.8.16;
 import {FxBaseRootTunnel} from "fx-portal/contracts/tunnel/FxBaseRootTunnel.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "../interfaces/IBridge.sol";
 import "../interfaces/IMessageReceiver.sol";
 import "../interfaces/IMessageSender.sol";
 
@@ -24,8 +23,8 @@ contract RootTunnel is FxBaseRootTunnel, IMessageSender, Ownable {
 
     constructor() FxBaseRootTunnel(GOERLI_CHECKPOINT_MANAGER, GOERLI_FX_ROOT) {}
 
-    function setParent(IMessageReceiver _parent) external onlyOwner {
-        parent = _parent;
+    function setParent(address _parent) external onlyOwner {
+        parent = IMessageReceiver(_parent);
     }
 
     function _processMessageFromChild(bytes memory data) internal override {

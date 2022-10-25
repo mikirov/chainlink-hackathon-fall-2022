@@ -24,8 +24,8 @@ contract ChildTunnel is FxBaseChildTunnel, IMessageSender, Ownable {
 
     constructor() FxBaseChildTunnel(MUMBAI_FX_CHILD) {}
 
-    function setParent(IMessageReceiver _parent) external onlyOwner {
-        parent = _parent;
+    function setParent(address _parent) external onlyOwner {
+        parent = IMessageReceiver(_parent);
     }
 
     function _processMessageFromRoot(

@@ -13,8 +13,8 @@
   },
   "files": {
     "contracts/Bridge.sol": {
-      "lastModificationDate": 1666366753541,
-      "contentHash": "c926a1b7516221af0445d7fd05c74285",
+      "lastModificationDate": 1666695761017,
+      "contentHash": "39b8db0e5c46a8221af7c711d14b3d22",
       "sourceName": "contracts/Bridge.sol",
       "solcConfig": {
         "settings": {
@@ -46,17 +46,23 @@
       },
       "imports": [
         "contracts/CrossChainUpgradable.sol",
+        "contracts/LiquidityPool.sol",
         "contracts/interfaces/IBridge.sol",
-        "contracts/interfaces/IERC20.sol",
-        "contracts/interfaces/ILiquidityPool.sol",
         "contracts/interfaces/IMessageReceiver.sol",
         "contracts/interfaces/IMessageSender.sol",
+        "lib/forge-std/src/console.sol",
+        "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
-        "node_modules/fx-portal/contracts/lib/Address.sol",
-        "node_modules/hardhat/console.sol"
+        "node_modules/fx-portal/contracts/lib/Address.sol"
       ],
       "versionRequirement": "^0.8.16",
       "artifacts": {
@@ -66,8 +72,8 @@
       }
     },
     "contracts/CrossChainUpgradable.sol": {
-      "lastModificationDate": 1666363978179,
-      "contentHash": "c1ed008fd13569d5778d502c8fb6b15e",
+      "lastModificationDate": 1666619944137,
+      "contentHash": "8945f2a412d9bc2ab4e22e25015cbe7d",
       "sourceName": "contracts/CrossChainUpgradable.sol",
       "solcConfig": {
         "settings": {
@@ -102,8 +108,7 @@
         "contracts/interfaces/IMessageSender.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
-        "node_modules/fx-portal/contracts/lib/Address.sol",
-        "node_modules/hardhat/console.sol"
+        "node_modules/fx-portal/contracts/lib/Address.sol"
       ],
       "versionRequirement": "^0.8.16",
       "artifacts": {
@@ -113,8 +118,8 @@
       }
     },
     "contracts/LiquidityPool.sol": {
-      "lastModificationDate": 1666366443179,
-      "contentHash": "4bcb49c52c9ddf376ac0e662973a9620",
+      "lastModificationDate": 1666614902959,
+      "contentHash": "0289217107fc83573fe0303978c09456",
       "sourceName": "contracts/LiquidityPool.sol",
       "solcConfig": {
         "settings": {
@@ -145,13 +150,9 @@
         }
       },
       "imports": [
-        "contracts/interfaces/IERC20.sol",
-        "contracts/interfaces/IERC20Permit.sol",
-        "contracts/interfaces/ILiquidityPool.sol",
         "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
         "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
-        "node_modules/@openzeppelin/contracts/security/Pausable.sol",
-        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
         "node_modules/@openzeppelin/contracts/utils/Strings.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
@@ -164,49 +165,9 @@
         }
       }
     },
-    "contracts/console.sol": {
-      "lastModificationDate": 1666458186099,
-      "contentHash": "100b8a33b917da1147740d7ab8b0ded3",
-      "sourceName": "contracts/console.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs",
-            "appendCBOR": true
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": ">=0.4.22, <0.9.0",
-      "artifacts": {
-        "console": {
-          "0.8.17+commit.8df45f5f.Darwin.appleclang": "console.sol/console.json"
-        }
-      }
-    },
     "contracts/interfaces/IBridge.sol": {
-      "lastModificationDate": 1666351368487,
-      "contentHash": "e058feac6b0826f5a608482da3eb623b",
+      "lastModificationDate": 1666619707681,
+      "contentHash": "e52acb0b3518daf4cc020bf33f991af9",
       "sourceName": "contracts/interfaces/IBridge.sol",
       "solcConfig": {
         "settings": {
@@ -237,7 +198,7 @@
         }
       },
       "imports": [],
-      "versionRequirement": null,
+      "versionRequirement": "^0.8.17",
       "artifacts": {
         "IBridge": {
           "0.8.17+commit.8df45f5f.Darwin.appleclang": "IBridge.sol/IBridge.json"
@@ -285,7 +246,7 @@
       }
     },
     "contracts/interfaces/IERC20.sol": {
-      "lastModificationDate": 1666363087241,
+      "lastModificationDate": 1666614473114,
       "contentHash": "020f718826122fba2f2c83ff2b7cb2cd",
       "sourceName": "contracts/interfaces/IERC20.sol",
       "solcConfig": {
@@ -325,7 +286,7 @@
       }
     },
     "contracts/interfaces/IERC20Permit.sol": {
-      "lastModificationDate": 1666363087241,
+      "lastModificationDate": 1666614473114,
       "contentHash": "8167da645f35d234d6aa5461d3286c7d",
       "sourceName": "contracts/interfaces/IERC20Permit.sol",
       "solcConfig": {
@@ -363,46 +324,6 @@
       "artifacts": {
         "IERC20Permit": {
           "0.8.17+commit.8df45f5f.Darwin.appleclang": "IERC20Permit.sol/IERC20Permit.json"
-        }
-      }
-    },
-    "contracts/interfaces/ILiquidityPool.sol": {
-      "lastModificationDate": 1666363087241,
-      "contentHash": "c9b53bb1297244218c2a776d63add716",
-      "sourceName": "contracts/interfaces/ILiquidityPool.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs",
-            "appendCBOR": true
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": null,
-      "artifacts": {
-        "ILiquidityPool": {
-          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ILiquidityPool.sol/ILiquidityPool.0.8.17.json"
         }
       }
     },
@@ -566,7 +487,6 @@
         }
       },
       "imports": [
-        "contracts/interfaces/IBridge.sol",
         "contracts/interfaces/IMessageReceiver.sol",
         "contracts/interfaces/IMessageSender.sol",
         "contracts/tunnel/RootTunnel.sol",
@@ -585,9 +505,55 @@
         }
       }
     },
+    "contracts/test/TestBridgedToken.sol": {
+      "lastModificationDate": 1666620387815,
+      "contentHash": "d9b817210aa52cceb3a32c6fe0ea43fb",
+      "sourceName": "contracts/test/TestBridgedToken.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "TestBridgedToken": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "TestBridgedToken.sol/TestBridgedToken.json"
+        }
+      }
+    },
     "contracts/tunnel/ChildTunnel.sol": {
-      "lastModificationDate": 1666351368492,
-      "contentHash": "0cb40afc7d362d0dac03b2452f7b2f2c",
+      "lastModificationDate": 1666693760542,
+      "contentHash": "0dda17c833d003519d6a8f460e2dfead",
       "sourceName": "contracts/tunnel/ChildTunnel.sol",
       "solcConfig": {
         "settings": {
@@ -632,8 +598,8 @@
       }
     },
     "contracts/tunnel/RootTunnel.sol": {
-      "lastModificationDate": 1666351368496,
-      "contentHash": "39dab1ee0f02459e941d1fd43aebb2b7",
+      "lastModificationDate": 1666693777004,
+      "contentHash": "ecba414fda1a06b0ac7847143699352e",
       "sourceName": "contracts/tunnel/RootTunnel.sol",
       "solcConfig": {
         "settings": {
@@ -664,7 +630,6 @@
         }
       },
       "imports": [
-        "contracts/interfaces/IBridge.sol",
         "contracts/interfaces/IMessageReceiver.sol",
         "contracts/interfaces/IMessageSender.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
@@ -1113,10 +1078,10 @@
         }
       }
     },
-    "node_modules/@openzeppelin/contracts/security/Pausable.sol": {
-      "lastModificationDate": 1666348450099,
-      "contentHash": "25c8108f36fdd472bc78d4c4af240c11",
-      "sourceName": "node_modules/@openzeppelin/contracts/security/Pausable.sol",
+    "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1666348450016,
+      "contentHash": "af7bd64e1cfefbf6cb07f2adc1a25392",
+      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -1146,19 +1111,21 @@
         }
       },
       "imports": [
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol"
       ],
       "versionRequirement": "^0.8.0",
       "artifacts": {
-        "Pausable": {
-          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Pausable.sol/Pausable.json"
+        "ERC20": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ERC20.sol/ERC20.json"
         }
       }
     },
-    "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-      "lastModificationDate": 1666348450107,
-      "contentHash": "92f9448b23a90ea3bb932ee55cc3ccce",
-      "sourceName": "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+    "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1666348450062,
+      "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
+      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -1190,8 +1157,95 @@
       "imports": [],
       "versionRequirement": "^0.8.0",
       "artifacts": {
-        "ReentrancyGuard": {
-          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
+        "IERC20": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ERC20/IERC20.sol/IERC20.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
+      "lastModificationDate": 1666348450017,
+      "contentHash": "a1c7f80ae26f5b2d7d563475627fbf25",
+      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "ERC20Burnable": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "ERC20Burnable.sol/ERC20Burnable.json"
+        }
+      }
+    },
+    "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1666348450062,
+      "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
+      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "IERC20Metadata": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "IERC20Metadata.sol/IERC20Metadata.json"
         }
       }
     },
@@ -1824,10 +1878,10 @@
         }
       }
     },
-    "node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1666348450233,
-      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
-      "sourceName": "node_modules/hardhat/console.sol",
+    "test/Bridge.t.sol": {
+      "lastModificationDate": 1666696083113,
+      "contentHash": "59cf738939dc812397031cf265949fcc",
+      "sourceName": "test/Bridge.t.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -1856,17 +1910,58 @@
           "libraries": {}
         }
       },
-      "imports": [],
-      "versionRequirement": null,
+      "imports": [
+        "contracts/Bridge.sol",
+        "contracts/CrossChainUpgradable.sol",
+        "contracts/LiquidityPool.sol",
+        "contracts/interfaces/IBridge.sol",
+        "contracts/interfaces/IMessageReceiver.sol",
+        "contracts/interfaces/IMessageSender.sol",
+        "contracts/test/ChildTunnelPublic.sol",
+        "contracts/test/RootTunnelPublic.sol",
+        "contracts/test/TestBridgedToken.sol",
+        "contracts/tunnel/ChildTunnel.sol",
+        "contracts/tunnel/RootTunnel.sol",
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/StdJson.sol",
+        "lib/forge-std/src/Test.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol",
+        "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Strings.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
+        "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
+        "node_modules/fx-portal/contracts/lib/Address.sol",
+        "node_modules/fx-portal/contracts/lib/ExitPayloadReader.sol",
+        "node_modules/fx-portal/contracts/lib/Merkle.sol",
+        "node_modules/fx-portal/contracts/lib/MerklePatriciaProof.sol",
+        "node_modules/fx-portal/contracts/lib/RLPReader.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol",
+        "node_modules/fx-portal/contracts/tunnel/FxBaseRootTunnel.sol"
+      ],
+      "versionRequirement": "^0.8.10",
       "artifacts": {
-        "console": {
-          "0.8.17+commit.8df45f5f.Darwin.appleclang": "hardhat/console.sol/console.json"
+        "BridgeTest": {
+          "0.8.17+commit.8df45f5f.Darwin.appleclang": "Bridge.t.sol/BridgeTest.json"
         }
       }
     },
     "test/LiquidityPool.t.sol": {
-      "lastModificationDate": 1666530534614,
-      "contentHash": "789453c4a45d313ee5974a8c2d3a0516",
+      "lastModificationDate": 1666623114723,
+      "contentHash": "8890defd35c7c8ba18b39652046edecc",
       "sourceName": "test/LiquidityPool.t.sol",
       "solcConfig": {
         "settings": {
@@ -1898,9 +1993,7 @@
       },
       "imports": [
         "contracts/LiquidityPool.sol",
-        "contracts/interfaces/IERC20.sol",
-        "contracts/interfaces/IERC20Permit.sol",
-        "contracts/interfaces/ILiquidityPool.sol",
+        "contracts/test/TestBridgedToken.sol",
         "lib/forge-std/lib/ds-test/src/test.sol",
         "lib/forge-std/src/Script.sol",
         "lib/forge-std/src/StdJson.sol",
@@ -1910,8 +2003,10 @@
         "lib/forge-std/src/console2.sol",
         "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
         "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
-        "node_modules/@openzeppelin/contracts/security/Pausable.sol",
-        "node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
         "node_modules/@openzeppelin/contracts/utils/Strings.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",

@@ -5,7 +5,6 @@ import "fx-portal/contracts/lib/Address.sol";
 
 import "./interfaces/IMessageReceiver.sol";
 import "./interfaces/IMessageSender.sol";
-import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
@@ -22,10 +21,8 @@ contract CrossChainUpgradable is Initializable, IMessageReceiver {
         tunnel = IMessageSender(_tunnel);
     }
 
-
     /// @notice send requests to other chain
     function _sendMessage(bytes memory message) internal {
-        console.log("_sendMessage", message.length);
         tunnel.sendMessage(message);
     }
 

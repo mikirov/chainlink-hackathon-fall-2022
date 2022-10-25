@@ -1,22 +1,24 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
+
+import "forge-std/console.sol";
 
 import "./interfaces/IBridge.sol";
-import "./CrossChain.sol";
 import "./LiquidityPool.sol";
-
 import "./CrossChainUpgradable.sol";
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "hardhat/console.sol";
 
 contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
     mapping(address => mapping(address => uint256)) public withdrawable;
 
+    event BridgedTokenWithdrawn(uint256 amount);
+    error NoBridgeTokenToWithdraw();
+
     // address of the liquidity pool
-    ILiquidityPool public liquidityPool;
+    LiquidityPool public liquidityPool;
 
     function initialize(
         address _tunnel,
@@ -24,7 +26,7 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
     ) public initializer{
         __CrossChain_init(_tunnel);
         __Ownable_init();
-        liquidityPool = ILiquidityPool(_liquidityPool);
+        liquidityPool = LiquidityPool(_liquidityPool);
     }
 
     function _unlockBridgedTokenRequest(
@@ -43,7 +45,17 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
 
     function bridgeToken(address token, uint256 amount) external {
         // Deposit ERC20 to the bridge / LP
-        
+        console.log(msg.sender);
+        bool status = IERC20(token).transferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+        require(status);
+
+        IERC20(token).approve(address(liquidityPool), amount);
+
+        liquidityPool.addLiquidity(token, amount);
         _sendMessage(_unlockBridgedTokenRequest(token, msg.sender, amount));
     }
 
@@ -82,6 +94,8 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
             uint amount
         ) {
             emit BridgedTokenWithdrawn(amount);
-        } catch {}
+        } catch {
+            console.log("Errored");
+        }
     }
 }
