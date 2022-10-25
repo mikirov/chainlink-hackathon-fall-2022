@@ -4,20 +4,20 @@ export async function deployPolygon() {
   const [polygonSigner] = await ethers.getSigners();
 
 	const childTunenlFactory = await ethers.getContractFactory("ChildTunnel",polygonSigner);
-	childTunnel = await childTunenlFactory.deploy();
+	const childTunnel = await childTunenlFactory.deploy();
   await childTunnel.deployed();
 
-  console.log("Polygon Tunnel deployed to: ", rootTunnel.address);
+  console.log("Polygon Tunnel deployed to: ", childTunnel.address);
 
 
 	const polygonPoolFactory = await ethers.getContractFactory('LiquidityPool', polygonSigner);
-	polygonPool = await polygonPoolFactory.deploy(await polygonSigner.getAddress());
+	const polygonPool = await polygonPoolFactory.deploy(await polygonSigner.getAddress());
   await polygonPool.deployed();
 
-  console.log("Polygon Pool deployed to: ", ethereumPool.address);
+  console.log("Polygon Pool deployed to: ", polygonPool.address);
 
 	const polygonBridgeFactory = await ethers.getContractFactory("Bridge", polygonSigner);
-	polygonBridge = await upgrades.deployProxy(polygonBridgeFactory, [childTunnel.address, polygonPool.address], { unsafeAllow: ['delegatecall'] }) as Bridge;
+	const polygonBridge = await upgrades.deployProxy(polygonBridgeFactory, [childTunnel.address, polygonPool.address], { unsafeAllow: ['delegatecall'] }) as Bridge;
 
 	await polygonPool.setBridge(polygonBridge.address);
 	await childTunnel.setParent(polygonBridge.address);

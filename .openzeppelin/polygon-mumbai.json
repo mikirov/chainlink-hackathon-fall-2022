@@ -1,0 +1,132 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x90B29C2b8D3403337A8C1695b7e21782313D2B20",
+    "txHash": "0x95fdae3f5031a587952284024341cd28cb9c5ababc6a6533969b28121ffcc322"
+  },
+  "proxies": [
+    {
+      "address": "0x3b8113aa1aD2e653D020F4494FAF3a64dEFB7313",
+      "txHash": "0x69a80132f3784030edd70ac17fedccc71e097c1f0c7fee6a7e03745960e94c80",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "68889d32af4c80d9349f592320199c7baddb08965e67c4cdf1375614666f0a4b": {
+      "address": "0xEc07f7E79D0de27AC39Eb72CBE88BF82f102f88F",
+      "txHash": "0x4c6cf16003a205b8bda4d7d27b0570de4d8ff6651de65b390513db7b1df9e8b5",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "tunnel",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IMessageSender)2106",
+            "contract": "CrossChainUpgradable",
+            "src": "contracts/CrossChainUpgradable.sol:12"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "withdrawable",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+            "contract": "Bridge",
+            "src": "contracts/Bridge.sol:15"
+          },
+          {
+            "label": "liquidityPool",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_contract(LiquidityPool)2078",
+            "contract": "Bridge",
+            "src": "contracts/Bridge.sol:21"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IMessageSender)2106": {
+            "label": "contract IMessageSender",
+            "numberOfBytes": "20"
+          },
+          "t_contract(LiquidityPool)2078": {
+            "label": "contract LiquidityPool",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+            "label": "mapping(address => mapping(address => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
