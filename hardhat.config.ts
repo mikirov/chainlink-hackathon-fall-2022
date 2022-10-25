@@ -12,6 +12,21 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const lazyImport = async (module: any) => {
+  return await import(module);
+};
+
+task('deploy-polygon', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployPolygon } = await lazyImport('./scripts/deploy-polygon');
+  await deployPolygon();
+});
+
+task('deploy-ethereum', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployEthereum } = await lazyImport('./scripts/deploy-ethereum');
+  await deployEthereum();
+});
+
+
 
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(
   async (args, hre) => {
@@ -66,6 +81,14 @@ const config: HardhatUserConfig = {
     local_polygon: {
       url: "http://127.0.0.1:8546",
     },
+    mumbai: {
+      url: `https://mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts: [process.env.DEPLOYER_PK ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts: [process.env.DEPLOYER_PK ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    }
   },
 };
 

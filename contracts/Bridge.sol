@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 
-import "forge-std/console.sol";
+// import "forge-std/console.sol";
 
 import "./interfaces/IBridge.sol";
 import "./LiquidityPool.sol";
