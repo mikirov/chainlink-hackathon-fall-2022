@@ -21,7 +21,7 @@
 		"local:withdrawable-polygon": "npx hardhat get-bridged-balance --network local_polygon",
 		"bridge-oracle": "ts-node scripts/test/bridge-oracle.ts",
 		"generate-proof": "ts-node scripts/test/generate-proof.ts",
-		"remix": "remixd -s . -u https://remix.ethereum.org"
+		"remix": "remixd -s ./contracts -u https://remix.ethereum.org"
 	},
 	"devDependencies": {
 		"@openzeppelin/contracts": "^4.7.3",

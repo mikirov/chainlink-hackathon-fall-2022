@@ -5,12 +5,14 @@ export async function deployEthereum() {
 
   const rootTunnelFactory = await ethers.getContractFactory("RootTunnel", ethereumSigner);
   const rootTunnel = await rootTunnelFactory.deploy();
+  // console.log(rootTunnel);
   await rootTunnel.deployed();
 
   console.log("Ethereum Tunnel deployed to: ", rootTunnel.address);
 
   const ethereumPoolFactory = await ethers.getContractFactory('LiquidityPool', ethereumSigner);
   const ethereumPool = await ethereumPoolFactory.deploy(await ethereumSigner.getAddress());
+  console.log(ethereumPool);
   await ethereumPool.deployed();
 
   console.log("Ethereum Pool deployed to: ", ethereumPool.address);
