@@ -61,7 +61,8 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({ web3 }) => {
             {connected && account ? (
               <Flex alignItems="center" justifyContent="center">
                 <Text mr="4">
-                  {ethers.utils.formatEther(balance).substring(0, 5)} ETH
+                  {ethers.utils.formatEther(balance).substring(0, 5)}{" "}
+                  {web3.chain?.nativeCurrency.symbol}
                 </Text>
                 <Button
                   mr={4}

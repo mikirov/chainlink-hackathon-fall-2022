@@ -24,8 +24,8 @@ function App() {
         margin="auto"
         height="full"
         alignItems="center"
-        justifyContent="center"
         flexDirection="column"
+        justifyContent="center"
       >
         <Box padding="8" boxShadow="dark-lg">
           <Tabs variant="enclosed" align="center">

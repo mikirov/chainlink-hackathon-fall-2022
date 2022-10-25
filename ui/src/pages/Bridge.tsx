@@ -9,20 +9,27 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import { ethers } from "ethers";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
+import config from "../config";
 import { UseWeb3 } from "../hooks/useWeb3";
-import Dropdown from "../components/Dropdown";
+import Dropdown, { DropdownItem } from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
 
 type BridgeProps = {
   web3: UseWeb3;
 };
 const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
-  const supportedNetworks = [
-    { id: 1, title: "Ethereum", image: "/ethereum.svg" },
-    { id: 2, title: "Polygon", image: "/polygon.png" },
-  ];
+  const chainItems = config.supportedChains.map<DropdownItem>((chain) => ({
+    id: chain.chainId,
+    name: chain.chainName,
+    image: chain.iconUrls[0],
+  }));
+
+  const changeSourceChain = (id: string) => {
+    web3.switchChain(id);
+  };
 
   return (
     <Flex
@@ -33,16 +40,16 @@ const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
       <Text>Select destination</Text>
       <Flex alignItems="center" padding="6">
         <Dropdown
-          items={supportedNetworks}
-          defaultSelected={supportedNetworks[0]}
+          items={chainItems}
+          defaultSelected={chainItems[0]}
+          onItemChange={({ id }) =>
+            changeSourceChain(ethers.utils.hexValue(id))
+          }
         />
 
         <ArrowForwardIcon mx="4" />
 
-        <Dropdown
-          items={supportedNetworks}
-          defaultSelected={supportedNetworks[1]}
-        />
+        <Dropdown items={chainItems} defaultSelected={chainItems[1]} />
       </Flex>
 
       <Text>Select token</Text>
@@ -53,7 +60,7 @@ const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
         </Flex>
         <Flex justifyContent="space-between" py="1">
           <InputGroup size="md" flex="1">
-            <Input pr="4.5rem" type="text" placeholder="0.0" />
+            <Input type="number" min={0} placeholder="0.0" />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={() => {}}>
                 MAX

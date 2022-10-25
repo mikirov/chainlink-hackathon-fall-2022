@@ -12,14 +12,16 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-type DropdownItem = { id: number; title: string; image: string };
+export type DropdownItem = { id: number | string; name: string; image: string };
 type DropdownProps = {
   items: DropdownItem[];
   defaultSelected: DropdownItem;
+  onItemChange?: <T>(item: T & DropdownItem) => void;
 };
 const Dropdown: React.FunctionComponent<DropdownProps> = ({
   items,
   defaultSelected,
+  onItemChange = () => {},
 }) => {
   const [selected, setSelected] = React.useState(defaultSelected);
 
@@ -35,15 +37,21 @@ const Dropdown: React.FunctionComponent<DropdownProps> = ({
         >
           <Flex width="full" height="full" alignItems="center">
             <Image src={selected.image} w="8" mr="2" />
-            <Text>{selected.title}</Text>
+            <Text>{selected.name}</Text>
           </Flex>
         </MenuButton>
         <MenuList>
           {items
             .filter((item) => item.id !== selected.id)
             .map((item) => (
-              <MenuItem key={item.id} onClick={(e) => setSelected(item)}>
-                <Image src={item.image} w="8" mr="4" /> {item.title}
+              <MenuItem
+                key={item.id}
+                onClick={(e) => {
+                  setSelected(item);
+                  onItemChange(item);
+                }}
+              >
+                <Image src={item.image} w="8" mr="4" /> {item.name}
               </MenuItem>
             ))}
         </MenuList>
