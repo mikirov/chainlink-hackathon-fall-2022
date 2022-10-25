@@ -82,7 +82,7 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8546",
     },
     mumbai: {
-      url: `https://mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts: [process.env.DEPLOYER_PK ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
     },
     goerli: {
