@@ -16,11 +16,10 @@ export async function deployEthereum() {
   console.log("Ethereum Pool deployed to: ", ethereumPool.address);
 
   const ethereumBridgeFactory = await ethers.getContractFactory("Bridge", ethereumSigner);
-  const ethereumBridge = await upgrades.deployProxy(ethereumBridgeFactory, [rootTunnel.address, ethereumPool.address]) as Bridge;
-  await ethereumBridge.deployed();
+  const ethereumBridge = await upgrades.deployProxy(ethereumBridgeFactory, [rootTunnel.address, ethereumPool.address], { unsafeAllow: ['delegatecall'] }) as Bridge;
 
   await ethereumPool.setBridge(ethereumBridge.address);
-  await rootTunnel.setBridge(ethereumBridge.address);
+  await rootTunnel.setParent(ethereumBridge.address);
 
   console.log("Ethereum Bridge Proxy deployed to:", ethereumBridge.address);
   

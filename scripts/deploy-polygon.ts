@@ -17,11 +17,10 @@ export async function deployPolygon() {
   console.log("Polygon Pool deployed to: ", ethereumPool.address);
 
 	const polygonBridgeFactory = await ethers.getContractFactory("Bridge", polygonSigner);
-	polygonBridge = await upgrades.deployProxy(polygonBridgeFactory, []) as Bridge;
-	await polygonBridge.deployed();
+	polygonBridge = await upgrades.deployProxy(polygonBridgeFactory, [childTunnel.address, polygonPool.address], { unsafeAllow: ['delegatecall'] }) as Bridge;
 
 	await polygonPool.setBridge(polygonBridge.address);
-	await childTunnel.setBridge(polygonBridge.address);
+	await childTunnel.setParent(polygonBridge.address);
 
 	console.log("Polygon Bridge Proxy deployed to:", polygonBridge.address);
 
