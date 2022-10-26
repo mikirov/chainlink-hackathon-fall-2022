@@ -44,7 +44,11 @@ export const ETHEREUM_GORLI_LIQUIDITY_POOL =
   "0x4CF99EC1E04471C8f2675Bcd8c7F49621E55720D";
 export const ETHEREUM_GORLI_BRIDGE =
   "0xb4030ed7F05489B10e0bF48C74298b89A4F67699";
-
+export const POLYGON_MUMBAI_LIQUIDITY_POOL =
+  "";
+export const POLYGON_MUMBAI_BRIDGE =
+  "";
+  
 export type Token = {
   id: number;
   address: string;
@@ -85,8 +89,8 @@ const configTestnet: Config = {
       BRIDGE: ETHEREUM_GORLI_BRIDGE,
     },
     "0x13881": {
-      LIQUIDITY_POOL: ETHEREUM_GORLI_LIQUIDITY_POOL,
-      BRIDGE: ETHEREUM_GORLI_BRIDGE,
+      LIQUIDITY_POOL: POLYGON_MUMBAI_LIQUIDITY_POOL,
+      BRIDGE: POLYGON_MUMBAI_BRIDGE,
     },
   },
 };

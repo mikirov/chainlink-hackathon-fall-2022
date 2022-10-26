@@ -6,6 +6,7 @@ import ERC20Abi from "../abi/ERC20.json";
 import LiquidityPoolAbi from "../abi/LiquidityPool.json";
 
 import config, { type Chain } from "../config";
+import { LiquidityPool } from "../abi/LiquidityPool";
 
 export type UseWeb3 = {
   chain: Chain;
@@ -17,6 +18,7 @@ export type UseWeb3 = {
     address: string
   ) => Promise<ethers.BigNumber>;
   addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
+  getLiquidityOfToken: (token: string) => Promise<any>;
 };
 const useWeb3 = (): UseWeb3 => {
   const metamask = useConnectedMetaMask();
@@ -39,17 +41,20 @@ const useWeb3 = (): UseWeb3 => {
   const _getERC20Contract = (tokenAddress: string) =>
     new ethers.Contract(tokenAddress, ERC20Abi, sourceProvider.getSigner());
 
-  const _getLiquidityPoolContract = () =>
+  const _getLiquidityPoolContract = (): LiquidityPool =>
     new ethers.Contract(
       LIQUIDITY_POOL_ADDRESS,
       LiquidityPoolAbi,
       sourceProvider.getSigner()
-    );
+    ) as LiquidityPool;
 
   const approveToken = async (token: string, amount: string) => {
     const approveTransaction = await _getERC20Contract(token).approve(
       LIQUIDITY_POOL_ADDRESS,
-      amount
+      amount,
+      {
+        // gasLimit: 20000,
+      }
     );
 
     return approveTransaction.wait();
@@ -81,13 +86,23 @@ const useWeb3 = (): UseWeb3 => {
     const depositBalance = ethers.utils.parseEther(amount);
     console.log("depositBalance", depositBalance);
 
-    const approve = await approveToken(tokenAddress, amount);
+    const approve = await approveToken(tokenAddress, depositBalance.toString());
 
     console.log("approve", approve);
 
-    // const addLP = await addLiquidityToken(tokenAddress, amount);
+    const addLP = await addLiquidityToken(
+      tokenAddress,
+      depositBalance.toString()
+    );
 
-    // console.log("addLiquidity", addLP);
+    console.log("addLiquidity", addLP);
+  };
+
+  const getLiquidityOfToken = async (address: string) => {
+    return _getLiquidityPoolContract().getLiquidityOfUser(
+      metamask.account,
+      address
+    );
   };
 
   return {
@@ -98,6 +113,7 @@ const useWeb3 = (): UseWeb3 => {
     sourceProvider,
     getTokenBalanceOfCurrentAccount,
     addLiquidity,
+    getLiquidityOfToken,
   };
 };
 

@@ -3,12 +3,11 @@ import {
   Box,
   Button,
   Flex,
+  Text,
   Input,
+  Spinner,
   InputGroup,
   InputRightElement,
-  Spinner,
-  Text,
-  useToast,
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 
@@ -16,19 +15,18 @@ import config, { Token } from "../config";
 import { UseWeb3 } from "../hooks/useWeb3";
 import Dropdown from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
+import useNotification from "../hooks/useNotification";
 
 type AddLiquidityProps = { web3: UseWeb3 };
 const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
   const [token, setToken] = React.useState<Token>(config.tokens[0]);
   const [tokenBalance, setTokenBalance] = React.useState("0");
-  const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
   const [tokenBalanceInput, setTokenBalanceInput] = React.useState("");
+  const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("");
+  const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
+  const [addLiquidityLoading, setAddLiquidityLoading] = React.useState(false);
 
-  const toast = useToast({
-    position: "top",
-    duration: 3500,
-    variant: "subtle",
-  });
+  const { showError, showSuccess } = useNotification();
 
   const tokenBalanceInputError = React.useMemo(() => {
     const balance = Number(tokenBalanceInput);
@@ -38,31 +36,45 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
   }, [tokenBalanceInput]);
 
   React.useEffect(() => {
+    web3
+      .getLiquidityOfToken(token.address)
+      .then((balance) =>
+        setTokenLiquidityOfUser(
+          Number(ethers.utils.formatEther(balance)).toFixed(0)
+        )
+      );
+  });
+
+  React.useEffect(() => {
+    _updateTokenBalance();
+  }, [token, web3.sourceProvider]);
+
+  const _updateTokenBalance = () => {
     setTokenBalanceLoading(true);
 
     web3
       .getTokenBalanceOfCurrentAccount(token.address)
-      .then((balance) => setTokenBalance(ethers.utils.formatEther(balance)))
+      .then((balance) =>
+        setTokenBalance(Number(ethers.utils.formatEther(balance)).toFixed(0))
+      )
       .finally(() => setTokenBalanceLoading(false));
-  }, [token, web3.sourceProvider]);
+  };
 
-  const addLiquidity = () =>
+  const addLiquidity = () => {
+    setAddLiquidityLoading(true);
+
     web3
       .addLiquidity(token.address, tokenBalanceInput)
+      .then(() => _updateTokenBalance())
+      .then(() => setTokenBalanceInput(""))
       .then(() =>
-        toast({
-          status: "success",
-          title: "The transaction was successfull!",
-          description: `You have added ${tokenBalanceInput} ${token.name} to the liquidity pool`,
-        })
+        showSuccess(
+          `You have added ${tokenBalanceInput} ${token.name} to the liquidity pool`
+        )
       )
-      .catch((error) =>
-        toast({
-          status: "error",
-          title: "The transaction failed",
-          description: error.reason,
-        })
-      );
+      .catch((error) => showError(error.reason))
+      .finally(() => setAddLiquidityLoading(false));
+  };
 
   return (
     <Flex
@@ -93,7 +105,9 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
                 <Button
                   h="1.75rem"
                   size="sm"
-                  onClick={() => setTokenBalanceInput(tokenBalance)}
+                  onClick={() =>
+                    setTokenBalanceInput(Number(tokenBalance).toString())
+                  }
                 >
                   MAX
                 </Button>
@@ -109,10 +123,14 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
           </Flex>
         </Box>
 
+        <Text>My liquidity: {tokenLiquidityOfUser}</Text>
+
         <PrimaryButton
           mt={4}
           width="full"
-          disabled={tokenBalanceInputError}
+          isLoading={addLiquidityLoading}
+          loadingText="Adding liquidity..."
+          disabled={addLiquidityLoading || tokenBalanceInputError}
           onClick={addLiquidity}
         >
           Add Liquidity
