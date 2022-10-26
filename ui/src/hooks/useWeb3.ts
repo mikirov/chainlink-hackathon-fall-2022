@@ -16,6 +16,7 @@ export type UseWeb3 = {
   getTokenBalanceOfCurrentAccount: (
     address: string
   ) => Promise<ethers.BigNumber>;
+  addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
 };
 const useWeb3 = (): UseWeb3 => {
   const metamask = useConnectedMetaMask();
@@ -24,20 +25,41 @@ const useWeb3 = (): UseWeb3 => {
   );
   const [sourceProvider, setSourceProvider] =
     React.useState<ethers.providers.JsonRpcProvider>(
-      new ethers.providers.JsonRpcProvider(
-        config.chains[metamask.chainId].rpcUrls[0]
-      )
+      new ethers.providers.Web3Provider(metamask.ethereum)
     );
 
+  const LIQUIDITY_POOL_ADDRESS = config.contracts[chain.chainId].LIQUIDITY_POOL;
+
   React.useEffect(() => {
-    setChain(config.chains[metamask.chainId]);
-    if (metamask.chainId)
-      setSourceProvider(
-        new ethers.providers.JsonRpcProvider(
-          config.chains[metamask.chainId].rpcUrls[0]
-        )
-      );
-  }, [metamask.account, metamask.chainId]);
+    const currentChain = config.chains[metamask.chainId];
+    setChain(currentChain);
+    setSourceProvider(new ethers.providers.Web3Provider(metamask.ethereum));
+  }, [metamask.chainId]);
+
+  const _getERC20Contract = (tokenAddress: string) =>
+    new ethers.Contract(tokenAddress, ERC20Abi, sourceProvider.getSigner());
+
+  const _getLiquidityPoolContract = () =>
+    new ethers.Contract(
+      LIQUIDITY_POOL_ADDRESS,
+      LiquidityPoolAbi,
+      sourceProvider.getSigner()
+    );
+
+  const approveToken = async (token: string, amount: string) => {
+    const approveTransaction = await _getERC20Contract(token).approve(
+      LIQUIDITY_POOL_ADDRESS,
+      amount
+    );
+
+    return approveTransaction.wait();
+  };
+
+  const addLiquidityToken = async (token: string, amount: string) => {
+    const addLiquidityTransaction =
+      await _getLiquidityPoolContract().addLiquidity(token, amount);
+    return addLiquidityTransaction.wait();
+  };
 
   const switchChain = (id: string) =>
     metamask
@@ -47,11 +69,25 @@ const useWeb3 = (): UseWeb3 => {
       );
 
   const getTokenBalanceOfCurrentAccount = async (address: string) => {
-    const erc20 = new ethers.Contract(address, ERC20Abi, sourceProvider!);
-    const balance = await erc20.balanceOf(metamask.account);
+    const balance = await _getERC20Contract(address).balanceOf(
+      metamask.account
+    );
     console.log("balance", balance);
 
     return ethers.BigNumber.from(balance);
+  };
+
+  const addLiquidity = async (tokenAddress: string, amount: string) => {
+    const depositBalance = ethers.utils.parseEther(amount);
+    console.log("depositBalance", depositBalance);
+
+    const approve = await approveToken(tokenAddress, amount);
+
+    console.log("approve", approve);
+
+    // const addLP = await addLiquidityToken(tokenAddress, amount);
+
+    // console.log("addLiquidity", addLP);
   };
 
   return {
@@ -61,6 +97,7 @@ const useWeb3 = (): UseWeb3 => {
     switchChain,
     sourceProvider,
     getTokenBalanceOfCurrentAccount,
+    addLiquidity,
   };
 };
 
