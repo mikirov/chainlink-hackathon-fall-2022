@@ -22,6 +22,9 @@ contract BridgeTest is Test
     RootTunnelPublic rootTunnel;
     ChildTunnelPublic childTunnel;
 
+    TokenMapping ethereumTokenMapping;
+    TokenMapping polygonTokenMapping;
+
     LiquidityPool ethereumPool;
     LiquidityPool polygonPool;
     
@@ -40,55 +43,64 @@ contract BridgeTest is Test
         ethereumForkId = vm.createFork("http://127.0.0.1:8545/");
         owner = address(this);
 
-        vm.prank(owner);
+        vm.startPrank(owner);
 
         /// @notice this token is created here and will exist on both forks
         token1 = new TestBridgedToken("Test1", "TST1", owner);
+        /// @notice persistent so the addresses of both tokens can be accessed on both forks
         vm.makePersistent(address(token1));
-        token1.mint(owner, 100 * 10**18);
-        token1.mint(user1, 200 * 10**18);
-        token1.mint(user2, 300 * 10**18);
+        token1.mint(user2, 50 * 10**18);
+
+        token2 = new TestBridgedToken("Test2", "TST2", owner);
+        vm.makePersistent(address(token2));
+        token2.mint(user1, 50 * 10**18);
 
         vm.selectFork(ethereumForkId);
         
         rootTunnel = new RootTunnelPublic();
         ethereumPool = new LiquidityPool(owner);
+        ethereumTokenMapping = new TokenMapping();
         ethereumBridge = new Bridge();
-        ethereumBridge.initialize(address(rootTunnel), address(ethereumPool));
+        ethereumBridge.initialize(address(rootTunnel), address(ethereumPool), address(ethereumTokenMapping));
         ethereumPool.setBridge(address(ethereumBridge));
         rootTunnel.setParent(address(ethereumBridge));
         
+        ethereumTokenMapping.addToMapping(address(token1), address(token2));
+
         vm.selectFork(polygonForkId);
 
         childTunnel = new ChildTunnelPublic();
         polygonPool = new LiquidityPool(owner);
+        polygonTokenMapping = new TokenMapping();
         polygonBridge = new Bridge();
-        polygonBridge.initialize(address(childTunnel), address(polygonPool));
+        polygonBridge.initialize(address(childTunnel), address(polygonPool), address(polygonTokenMapping));
         polygonPool.setBridge(address(polygonBridge));
         childTunnel.setParent(address(polygonBridge));
+
+        polygonTokenMapping.addToMapping(address(token2), address(token1));
+
+        vm.stopPrank();
 
     }
 
     function testAddLiquidityPolygon() public
     {
         vm.startPrank(user1);
-        token1.approve(address(polygonPool), 50 * 10 ** 18);
-        polygonPool.addLiquidity(address(token1), 50 * 10 ** 18);
-        assertEq(polygonPool.getLiquidityOfToken(address(token1)), 50 * 10 ** 18);
+        token2.approve(address(polygonPool), 50 * 10 ** 18);
+        polygonPool.addLiquidity(address(token2), 50 * 10 ** 18);
         
-        console.logUint(polygonPool.getLiquidityOfToken(address(token1)));
-        console.logUint(polygonPool.getLiquidityOfUser(user1, address(token1)));
+        // console.logUint(polygonPool.getLiquidityOfToken(address(token2)));
+        // console.logUint(polygonPool.getLiquidityOfUser(user1, address(token2)));
         
+        assertEq(polygonPool.getLiquidityOfUser(user1, address(token2)), 50 * 10 ** 18);
+        assertEq(polygonPool.getLiquidityOfToken(address(token2)), 50 * 10 ** 18);
+        assertEq(token2.balanceOf(user1), 0);
 
-        assertEq(polygonPool.getLiquidityOfUser(user1, address(token1)), 50 * 10 ** 18);
-        assertEq(polygonPool.getLiquidityOfToken(address(token1)), 50 * 10 ** 18);
-        
         vm.stopPrank();
     }
 
-    function testBridgeTokenEthereumToPolygon() public
+    function testBridgeTokenOnEthereum() public
     {
-
         vm.selectFork(ethereumForkId);
         
         vm.startPrank(user2);
@@ -98,35 +110,29 @@ contract BridgeTest is Test
 
         ethereumBridge.bridgeToken(address(token1), 50 * 10 ** 18);
         
-        assertEq(token1.balanceOf(user2), 250 * 10 ** 18); /// from 300
-        assertEq(token1.balanceOf(address(ethereumBridge)), 0);
-        assertEq(ethereumPool.getLiquidityOfUser(address(ethereumBridge), address(token1)), 50 * 10 ** 18);
-        assertEq(ethereumPool.getLiquidityOfToken(address(token1)), 50 * 10 ** 18);
+        assertEq(token1.balanceOf(user2), 0 );
+        assertEq(token1.balanceOf(address(ethereumBridge)), 0); /// the bridge itself shouldn't hold the tokens
+
+        assertEq(ethereumPool.getLiquidityOfUser(address(ethereumBridge), address(token1)), 50 * 10 ** 18); // the bridge should hold liquidity in the pool
+        assertEq(ethereumPool.getLiquidityOfToken(address(token1)), 50 * 10 ** 18); // pool token liquidity should increase
         
         vm.stopPrank();
+    }
+
+    function testBridgeTokenEthereumToPolygon() public
+    {
+
+        testBridgeTokenOnEthereum();
 
         vm.selectFork(polygonForkId);
 
-        assertEq(token1.balanceOf(user2), 250 * 10 ** 18);
-
         testAddLiquidityPolygon();
 
-        assertEq(polygonPool.getLiquidityOfToken(address(token1)), 50 * 10 ** 18);
-        assertEq(token1.balanceOf(user1), 150 * 10 ** 18);
-
         vm.startPrank(address(childTunnel));
-        polygonBridge.unlockBridgedToken(address(token1), user2, 50 * 10 ** 18);
+        polygonBridge.unlockBridgedToken(address(token2), user2, 50 * 10 ** 18);
         vm.stopPrank();
 
-
-        assertEq(polygonPool.getLiquidityOfToken(address(token1)), 0);
-        assertEq(token1.balanceOf(user2), 300 * 10 ** 18);
-
-
-        // assertEq(polygonPool.getWithdrawableBridgedTokenAmount(user2, address(token1)), 50 * 10 ** 18);
-
-        // vm.prank(user2);
-        // polygonBridge.withdrawBridgedToken(address(token1));
-        // vm.stopPrank();
+        assertEq(polygonPool.getLiquidityOfToken(address(token2)), 0);
+        assertEq(token2.balanceOf(user2), 50 * 10 ** 18);
     }
 }
