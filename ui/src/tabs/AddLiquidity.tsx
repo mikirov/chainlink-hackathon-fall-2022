@@ -12,9 +12,9 @@ import {
 import { ethers } from "ethers";
 
 import config, { Token } from "../config";
-import { UseWeb3 } from "../hooks/useWeb3";
 import Dropdown from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
+import { UseWeb3 } from "../hooks/useWeb3";
 import useNotification from "../hooks/useNotification";
 
 type AddLiquidityProps = { web3: UseWeb3 };
@@ -22,7 +22,7 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
   const [token, setToken] = React.useState<Token>(config.tokens[0]);
   const [tokenBalance, setTokenBalance] = React.useState("0");
   const [tokenBalanceInput, setTokenBalanceInput] = React.useState("");
-  const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("");
+  const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("0");
   const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
   const [addLiquidityLoading, setAddLiquidityLoading] = React.useState(false);
 
@@ -37,7 +37,7 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
 
   React.useEffect(() => {
     web3
-      .getLiquidityOfToken(token.address)
+      .getLiquidityOfUser(token.address)
       .then((balance) =>
         setTokenLiquidityOfUser(
           Number(ethers.utils.formatEther(balance)).toFixed(0)

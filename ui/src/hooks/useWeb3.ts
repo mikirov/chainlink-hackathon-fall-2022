@@ -18,7 +18,7 @@ export type UseWeb3 = {
     address: string
   ) => Promise<ethers.BigNumber>;
   addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
-  getLiquidityOfToken: (token: string) => Promise<any>;
+  getLiquidityOfUser: (token: string) => Promise<any>;
 };
 const useWeb3 = (): UseWeb3 => {
   const metamask = useConnectedMetaMask();
@@ -48,7 +48,7 @@ const useWeb3 = (): UseWeb3 => {
       sourceProvider.getSigner()
     ) as LiquidityPool;
 
-  const approveToken = async (token: string, amount: string) => {
+  const approveTokenToLiquidityPool = async (token: string, amount: string) => {
     const approveTransaction = await _getERC20Contract(token).approve(
       LIQUIDITY_POOL_ADDRESS,
       amount,
@@ -60,7 +60,7 @@ const useWeb3 = (): UseWeb3 => {
     return approveTransaction.wait();
   };
 
-  const addLiquidityToken = async (token: string, amount: string) => {
+  const addLiquidityOfToken = async (token: string, amount: string) => {
     const addLiquidityTransaction =
       await _getLiquidityPoolContract().addLiquidity(token, amount);
     return addLiquidityTransaction.wait();
@@ -86,11 +86,14 @@ const useWeb3 = (): UseWeb3 => {
     const depositBalance = ethers.utils.parseEther(amount);
     console.log("depositBalance", depositBalance);
 
-    const approve = await approveToken(tokenAddress, depositBalance.toString());
+    const approve = await approveTokenToLiquidityPool(
+      tokenAddress,
+      depositBalance.toString()
+    );
 
     console.log("approve", approve);
 
-    const addLP = await addLiquidityToken(
+    const addLP = await addLiquidityOfToken(
       tokenAddress,
       depositBalance.toString()
     );
@@ -98,7 +101,7 @@ const useWeb3 = (): UseWeb3 => {
     console.log("addLiquidity", addLP);
   };
 
-  const getLiquidityOfToken = async (address: string) => {
+  const getLiquidityOfUser = async (address: string) => {
     return _getLiquidityPoolContract().getLiquidityOfUser(
       metamask.account,
       address
@@ -113,7 +116,7 @@ const useWeb3 = (): UseWeb3 => {
     sourceProvider,
     getTokenBalanceOfCurrentAccount,
     addLiquidity,
-    getLiquidityOfToken,
+    getLiquidityOfUser,
   };
 };
 
