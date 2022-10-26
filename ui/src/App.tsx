@@ -12,9 +12,12 @@ import {
 import Navbar from "./components/Navbar";
 import Bridge from "./pages/Bridge";
 import useWeb3 from "./hooks/useWeb3";
+import AddLiquidity from "./pages/AddLiquidity";
+import PrimaryButton from "./components/PrimaryButton";
 
 function App() {
   const web3 = useWeb3();
+
   return (
     <Box height="full">
       <Navbar web3={web3} />
@@ -28,24 +31,30 @@ function App() {
         justifyContent="center"
       >
         <Box padding="8" boxShadow="dark-lg">
-          <Tabs variant="enclosed" align="center">
-            <TabList>
-              <Tab>Bridge</Tab>
-              <Tab>Add Liquidity</Tab>
-              <Tab>Remove Liquidity</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel pt={8}>
-                <Bridge web3={web3} />
-              </TabPanel>
-              <TabPanel>
-                <p>Add Liquidity</p>
-              </TabPanel>
-              <TabPanel>
-                <p>Remove Liquidity</p>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+          {web3.connected ? (
+            <Tabs variant="enclosed" align="center">
+              <TabList>
+                <Tab>Bridge</Tab>
+                <Tab>Add Liquidity</Tab>
+                <Tab>Remove Liquidity</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel pt={8}>
+                  <Bridge web3={web3} />
+                </TabPanel>
+                <TabPanel pt={8}>
+                  <AddLiquidity web3={web3} />
+                </TabPanel>
+                <TabPanel pt={8}>
+                  <p>Remove Liquidity</p>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          ) : (
+            <PrimaryButton mt={4} width="full" onClick={() => web3.connect()}>
+              Connect Wallet
+            </PrimaryButton>
+          )}
         </Box>
       </Flex>
     </Box>
