@@ -1,12 +1,36 @@
 import { HardhatUserConfig, task } from "hardhat/config";
-
-import "@nomicfoundation/hardhat-toolbox";
-import "hardhat-interface-generator";
 import { ethers } from "ethers";
+
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomiclabs/hardhat-ethers";
+import '@openzeppelin/hardhat-upgrades';
+import "@typechain/hardhat";
+import "hardhat-interface-generator";
+import "hardhat-deploy";
 
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const lazyImport = async (module: any) => {
+  return await import(module);
+};
+
+task('deploy-polygon', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployPolygon } = await lazyImport('./scripts/deploy-polygon');
+  await deployPolygon();
+});
+
+task('deploy-ethereum', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployEthereum } = await lazyImport('./scripts/deploy-ethereum');
+  await deployEthereum();
+});
+
+task('deploy-token', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployToken } = await lazyImport('./scripts/deploy-token');
+  await deployToken();
+});
+
 
 
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(
@@ -62,6 +86,16 @@ const config: HardhatUserConfig = {
     local_polygon: {
       url: "http://127.0.0.1:8546",
     },
+    mumbai: {
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts: [process.env.DEPLOYER_PK ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+      gasLimit: 10000000
+    },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts: [process.env.DEPLOYER_PK ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+      gasLimit: 10000000
+    }
   },
 };
 
