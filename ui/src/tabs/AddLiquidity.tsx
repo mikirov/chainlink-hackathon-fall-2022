@@ -24,11 +24,12 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
 
   React.useEffect(() => {
     setTokenBalanceLoading(true);
+
     web3
       .getTokenBalanceOfCurrentAccount(token.address)
       .then((balance) => setTokenBalance(ethers.utils.formatEther(balance)))
       .finally(() => setTokenBalanceLoading(false));
-  }, [token, web3.connected, web3.sourceProvider]);
+  }, [token, web3.sourceProvider]);
 
   return (
     <Flex
@@ -65,15 +66,9 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
           </Flex>
         </Box>
 
-        {web3.connected ? (
-          <PrimaryButton mt={4} width="full">
-            Add Liquidity
-          </PrimaryButton>
-        ) : (
-          <PrimaryButton mt={4} width="full" onClick={() => web3.connect()}>
-            Connect Wallet
-          </PrimaryButton>
-        )}
+        <PrimaryButton mt={4} width="full">
+          Add Liquidity
+        </PrimaryButton>
       </>
     </Flex>
   );

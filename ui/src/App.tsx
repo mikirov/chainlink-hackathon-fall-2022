@@ -1,22 +1,13 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-} from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import Navbar from "./components/Navbar";
-import Bridge from "./pages/Bridge";
-import useWeb3 from "./hooks/useWeb3";
-import AddLiquidity from "./pages/AddLiquidity";
-import PrimaryButton from "./components/PrimaryButton";
+import Connected from "./pages/Connected";
+import Disconnected from "./pages/Disconnected";
+import useWeb3Connection from "./hooks/useWeb3Connection";
 
-function App() {
-  const web3 = useWeb3();
+const App: React.FunctionComponent = () => {
+  const web3 = useWeb3Connection();
 
   return (
     <Box height="full">
@@ -30,35 +21,14 @@ function App() {
         flexDirection="column"
         justifyContent="center"
       >
-        <Box padding="8" boxShadow="dark-lg">
-          {web3.connected ? (
-            <Tabs variant="enclosed" align="center">
-              <TabList>
-                <Tab>Bridge</Tab>
-                <Tab>Add Liquidity</Tab>
-                <Tab>Remove Liquidity</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel pt={8}>
-                  <Bridge web3={web3} />
-                </TabPanel>
-                <TabPanel pt={8}>
-                  <AddLiquidity web3={web3} />
-                </TabPanel>
-                <TabPanel pt={8}>
-                  <p>Remove Liquidity</p>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          ) : (
-            <PrimaryButton mt={4} width="full" onClick={() => web3.connect()}>
-              Connect Wallet
-            </PrimaryButton>
-          )}
-        </Box>
+        {web3.connected ? (
+          <Connected />
+        ) : (
+          <Disconnected connect={web3.connect} />
+        )}
       </Flex>
     </Box>
   );
-}
+};
 
 export default App;

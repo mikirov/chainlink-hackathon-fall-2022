@@ -13,8 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import useWeb3, { UseWeb3 } from "../hooks/useWeb3";
+
 import PrimaryButton from "./PrimaryButton";
+import { Web3Connection } from "../hooks/useWeb3Connection";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -33,9 +34,8 @@ const NavLink = ({ children }: { children: ReactNode }) => (
   </Link>
 );
 
-type NavbarProps = { web3: UseWeb3 };
+type NavbarProps = { web3: Web3Connection };
 const Navbar: React.FunctionComponent<NavbarProps> = ({ web3 }) => {
-  const { connect, disconnect, connected, account, balance } = web3;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -58,10 +58,10 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({ web3 }) => {
             <Box>Bridge</Box>
           </HStack>
           <Flex alignItems={"center"}>
-            {connected && account ? (
+            {web3.connected && web3.account ? (
               <Flex alignItems="center" justifyContent="center">
                 <Text mr="4">
-                  {ethers.utils.formatEther(balance).substring(0, 5)}{" "}
+                  {ethers.utils.formatEther(web3.balance).substring(0, 5)}{" "}
                   {web3.chain?.nativeCurrency.symbol}
                 </Text>
                 <Button
@@ -69,16 +69,16 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({ web3 }) => {
                   size={"md"}
                   variant={"outline"}
                   colorScheme={"teal"}
-                  onClick={(e) => disconnect()}
+                  onClick={(e) => web3.disconnect()}
                 >
-                  {account.replace(
-                    account.substring(4, account.length - 4),
+                  {web3.account.replace(
+                    web3.account.substring(4, web3.account.length - 4),
                     "..."
                   )}
                 </Button>
               </Flex>
             ) : (
-              <PrimaryButton onClick={(e) => connect()} mr={2} size="sm">
+              <PrimaryButton onClick={(e) => web3.connect()} mr={2} size="sm">
                 Connect
               </PrimaryButton>
             )}

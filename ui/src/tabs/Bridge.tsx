@@ -75,15 +75,9 @@ const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
         </Flex>
       </Box>
 
-      {web3.connected ? (
-        <PrimaryButton mt={4} width="full">
-          Transfer
-        </PrimaryButton>
-      ) : (
-        <PrimaryButton mt={4} width="full" onClick={() => web3.connect()}>
-          Connect Wallet
-        </PrimaryButton>
-      )}
+      <PrimaryButton mt={4} width="full">
+        Transfer
+      </PrimaryButton>
     </Flex>
   );
 };
