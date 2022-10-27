@@ -100,12 +100,13 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
     function unlockBridgedToken(
         address token,
         address user,
-        uint256 amount
+        uint256 amount,
+        uint256 sourcePoolLiquidityAmount
     ) public onlyTunnel {
         liquidityPool.addBridgedToken(user, token, amount);
 
         // make sure the transaction will never revert
-        try liquidityPool.withdrawBridgedToken(user, token) returns (
+        try liquidityPool.withdrawBridgedToken(user, token, sourcePoolLiquidityAmount) returns (
             uint amount
         ) {
             emit BridgedTokenWithdrawn(amount);
