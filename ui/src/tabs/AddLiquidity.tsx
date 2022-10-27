@@ -9,27 +9,44 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { ethers } from "ethers";
+import shallow from "zustand/shallow";
 
-import config, { Token } from "../config";
+import config from "../config";
 import Dropdown from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
 import { UseWeb3 } from "../hooks/useWeb3";
 import useNotification from "../hooks/useNotification";
+import useProtocolStore from "../store";
 
 type AddLiquidityProps = { web3: UseWeb3 };
 const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
-  const [token, setToken] = React.useState<Token>(config.tokens[0]);
-  const [tokenBalance, setTokenBalance] = React.useState("0");
+  const [
+    token,
+    tokenBalance,
+    tokenLiquidityOfUser,
+    tokenBalanceLoading,
+    addLiquidityLoading,
+    tokenLiquidityOfUserLoading,
+    setToken,
+  ] = useProtocolStore(
+    (state) => [
+      state.token,
+      state.tokenBalance,
+      state.tokenLiquidityOfUser,
+      state.tokenBalanceLoading,
+      state.addLiquidityLoading,
+      state.tokenLiquidityOfUserLoading,
+      state.setToken,
+    ],
+    shallow
+  );
+
   const [tokenBalanceInput, setTokenBalanceInput] = React.useState("");
-  const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("0");
-  const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
-  const [addLiquidityLoading, setAddLiquidityLoading] = React.useState(false);
-  const [tokenLiquidityOfUserLoading, setTokenLiquidityOfUserLoading] =
-    React.useState(false);
 
   const { showError, showSuccess } = useNotification();
+
   console.log("add");
+
   const tokenBalanceInputError = React.useMemo(() => {
     const balance = Number(tokenBalanceInput);
     return (
@@ -37,44 +54,10 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
     );
   }, [tokenBalanceInput]);
 
-  React.useEffect(() => {
-    fetchTokenBalance_();
-    fetchTokenLiquidityOfUser_();
-  }, [token]);
-
-  const fetchTokenLiquidityOfUser_ = () => {
-    setTokenLiquidityOfUserLoading(true);
-
-    web3
-      .getLiquidityOfUser(token.address)
-      .then((balance) =>
-        setTokenLiquidityOfUser(
-          Number(ethers.utils.formatEther(balance)).toFixed(0)
-        )
-      )
-      .finally(() => setTokenLiquidityOfUserLoading(false));
-  };
-
-  const fetchTokenBalance_ = () => {
-    setTokenBalanceLoading(true);
-
-    web3
-      .getTokenBalanceOfCurrentAccount(token.address)
-      .then((balance) =>
-        setTokenBalance(Number(ethers.utils.formatEther(balance)).toFixed(0))
-      )
-      .finally(() => setTokenBalanceLoading(false));
-  };
-
   const addLiquidity = () => {
-    setAddLiquidityLoading(true);
-
     web3
-      .addLiquidity(token.address, tokenBalanceInput)
-      .then(() => fetchTokenBalance_())
-      .then(() => fetchTokenLiquidityOfUser_())
+      .addLiquidity(tokenBalanceInput)
       .then(() => setTokenBalanceInput(""))
-      .finally(() => setAddLiquidityLoading(false))
       .then(() =>
         showSuccess(
           `You have added ${tokenBalanceInput} ${token.name} to the liquidity pool`

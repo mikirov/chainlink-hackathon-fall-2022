@@ -9,27 +9,40 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { ethers } from "ethers";
+import shallow from "zustand/shallow";
 
-import config, { Token } from "../config";
+import config from "../config";
 import Dropdown from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
 import { UseWeb3 } from "../hooks/useWeb3";
 import useNotification from "../hooks/useNotification";
+import useProtocolStore from "../store";
 
 type RemoveLiquidityProps = { web3: UseWeb3 };
 const RemoveLiquidity: React.FunctionComponent<RemoveLiquidityProps> = ({
   web3,
 }) => {
-  const [token, setToken] = React.useState<Token>(config.tokens[0]);
-  const [tokenBalance, setTokenBalance] = React.useState("0");
   const [tokenBalanceInput, setTokenBalanceInput] = React.useState("");
-  const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("0");
-  const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
-  const [tokenLiquidityOfUserLoading, setTokenLiquidityOfUserLoading] =
-    React.useState(false);
-  const [removeLiquidityLoading, setRemoveLiquidityLoading] =
-    React.useState(false);
+  const [
+    token,
+    tokenBalance,
+    tokenLiquidityOfUser,
+    tokenBalanceLoading,
+    removeLiquidityLoading,
+    tokenLiquidityOfUserLoading,
+    setToken,
+  ] = useProtocolStore(
+    (state) => [
+      state.token,
+      state.tokenBalance,
+      state.tokenLiquidityOfUser,
+      state.tokenBalanceLoading,
+      state.removeLiquidityLoading,
+      state.tokenLiquidityOfUserLoading,
+      state.setToken,
+    ],
+    shallow
+  );
 
   const { showError, showSuccess } = useNotification();
 
@@ -44,44 +57,10 @@ const RemoveLiquidity: React.FunctionComponent<RemoveLiquidityProps> = ({
 
   console.log("remove");
 
-  React.useEffect(() => {
-    fetchTokenBalance_();
-    fetchTokenLiquidityOfUser_();
-  }, [token]);
-
-  const fetchTokenLiquidityOfUser_ = () => {
-    setTokenLiquidityOfUserLoading(true);
-
-    web3
-      .getLiquidityOfUser(token.address)
-      .then((balance) =>
-        setTokenLiquidityOfUser(
-          Number(ethers.utils.formatEther(balance)).toFixed(0)
-        )
-      )
-      .finally(() => setTokenLiquidityOfUserLoading(false));
-  };
-
-  const fetchTokenBalance_ = () => {
-    setTokenBalanceLoading(true);
-
-    web3
-      .getTokenBalanceOfCurrentAccount(token.address)
-      .then((balance) =>
-        setTokenBalance(Number(ethers.utils.formatEther(balance)).toFixed(0))
-      )
-      .finally(() => setTokenBalanceLoading(false));
-  };
-
   const removeLiquidity = () => {
-    setRemoveLiquidityLoading(true);
-
     web3
-      .removeLiquidity(token.address, tokenBalanceInput)
-      .then(() => fetchTokenBalance_())
-      .then(() => fetchTokenLiquidityOfUser_())
+      .removeLiquidity(tokenBalanceInput)
       .then(() => setTokenBalanceInput(""))
-      .finally(() => setRemoveLiquidityLoading(false))
       .then(() =>
         showSuccess(
           `You have removed ${tokenBalanceInput} ${token.name} from the liquidity pool`

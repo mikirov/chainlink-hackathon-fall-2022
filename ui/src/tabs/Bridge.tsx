@@ -13,9 +13,9 @@ import { ethers } from "ethers";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 import config from "../config";
-import { UseWeb3 } from "../hooks/useWeb3";
 import Dropdown, { DropdownItem } from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
+import { UseWeb3 } from "../hooks/useWeb3";
 
 type BridgeProps = {
   web3: UseWeb3;

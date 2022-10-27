@@ -1,141 +1,102 @@
-import React from "react";
 import { ethers } from "ethers";
-import { useConnectedMetaMask } from "metamask-react";
+import React from "react";
+import shallow from "zustand/shallow";
 
-import ERC20Abi from "../abi/ERC20.json";
-import LiquidityPoolAbi from "../abi/LiquidityPool.json";
-import { LiquidityPool } from "../abi/LiquidityPool";
-
-import config, { type Chain } from "../config";
+import useProtocolStore from "../store";
+import { type UseMetamask } from "./useMetamask";
+import { type UseProtocol } from "./useProtocol";
 
 export type UseWeb3 = {
-  chain: Chain;
-  account: string;
-  addChain: (parameters: any) => Promise<any>;
-  switchChain: (chainId: string) => Promise<void>;
-  sourceProvider: ethers.providers.JsonRpcProvider;
-  getTokenBalanceOfCurrentAccount: (
-    address: string
-  ) => Promise<ethers.BigNumber>;
-  addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
-  removeLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
-  getLiquidityOfUser: (token: string) => Promise<any>;
-};
-const useWeb3 = (): UseWeb3 => {
-  const metamask = useConnectedMetaMask();
-
-  const [chain, setChain] = React.useState<Chain>(
-    config.chains[metamask.chainId]
+  fetchTokenBalance: () => Promise<void>;
+  fetchTokenLiquidityOfUser: () => Promise<void>;
+  addLiquidity: (amount: string) => Promise<void>;
+  removeLiquidity: (amount: string) => Promise<void>;
+} & UseMetamask &
+  Omit<UseProtocol, "addLiquidity" | "removeLiquidity">;
+const useWeb3 = ({
+  metamask,
+  protocol,
+}: {
+  metamask: UseMetamask;
+  protocol: UseProtocol;
+}): UseWeb3 => {
+  const [
+    token,
+    setTokenBalance,
+    setTokenLiquidityOfUser,
+    setTokenBalanceLoading,
+    setAddLiquidityLoading,
+    setRemoveLiquidityLoading,
+    setTokenLiquidityOfUserLoading,
+  ] = useProtocolStore(
+    (state) => [
+      state.token,
+      state.setTokenBalance,
+      state.setTokenLiquidityOfUser,
+      state.setTokenBalanceLoading,
+      state.setAddLiquidityLoading,
+      state.setRemoveLiquidityLoading,
+      state.setTokenLiquidityOfUserLoading,
+    ],
+    shallow
   );
-  const [sourceProvider, setSourceProvider] =
-    React.useState<ethers.providers.JsonRpcProvider>(
-      new ethers.providers.Web3Provider(metamask.ethereum)
-    );
-
-  const LIQUIDITY_POOL_ADDRESS = config.contracts[chain.chainId].LIQUIDITY_POOL;
 
   React.useEffect(() => {
-    const currentChain = config.chains[metamask.chainId];
-    setChain(currentChain);
-    setSourceProvider(new ethers.providers.Web3Provider(metamask.ethereum));
-  }, [metamask.chainId]);
+    fetchTokenBalance();
+    fetchTokenLiquidityOfUser();
+  }, [token]);
 
-  const _getERC20Contract = (tokenAddress: string) =>
-    new ethers.Contract(tokenAddress, ERC20Abi, sourceProvider.getSigner());
+  const fetchTokenLiquidityOfUser = async () => {
+    setTokenLiquidityOfUserLoading(true);
 
-  const _getLiquidityPoolContract = (): LiquidityPool =>
-    new ethers.Contract(
-      LIQUIDITY_POOL_ADDRESS,
-      LiquidityPoolAbi,
-      sourceProvider.getSigner()
-    ) as LiquidityPool;
-
-  const approveTokenToLiquidityPool = async (token: string, amount: string) => {
-    const approveTransaction = await _getERC20Contract(token).approve(
-      LIQUIDITY_POOL_ADDRESS,
-      amount,
-      {
-        // gasLimit: 20000,
-      }
-    );
-
-    return approveTransaction.wait();
+    return protocol
+      .getLiquidityOfUser(metamask.account, token.address)
+      .then((balance) =>
+        setTokenLiquidityOfUser(
+          Number(ethers.utils.formatEther(balance)).toFixed(0)
+        )
+      )
+      .finally(() => setTokenLiquidityOfUserLoading(false));
   };
 
-  const addLiquidityOfToken = async (token: string, amount: string) => {
-    const addLiquidityTransaction =
-      await _getLiquidityPoolContract().addLiquidity(token, amount);
-    return addLiquidityTransaction.wait();
+  const fetchTokenBalance = async () => {
+    setTokenBalanceLoading(true);
+
+    return protocol
+      .getTokenBalanceOfUser(metamask.account, token.address)
+      .then((balance) =>
+        setTokenBalance(Number(ethers.utils.formatEther(balance)).toFixed(0))
+      )
+      .finally(() => setTokenBalanceLoading(false));
   };
 
-  const removeLiquidityOfToken = async (token: string, amount: string) => {
-    const removeLiquidityTransaction =
-      await _getLiquidityPoolContract().removeLiquidity(token, amount);
-    return removeLiquidityTransaction.wait();
+  const addLiquidity = async (amount: string) => {
+    setAddLiquidityLoading(true);
+
+    return protocol
+      .addLiquidity(token.address, amount)
+      .then(() => fetchTokenBalance())
+      .then(() => fetchTokenLiquidityOfUser())
+      .finally(() => setAddLiquidityLoading(false));
   };
 
-  const switchChain = (id: string) =>
-    metamask
-      .switchChain(id)
-      .catch((error) =>
-        error.code === 4902 ? metamask.addChain(config.chains[id]) : error
-      );
+  const removeLiquidity = async (amount: string) => {
+    setRemoveLiquidityLoading(true);
 
-  const getTokenBalanceOfCurrentAccount = async (address: string) => {
-    const balance = await _getERC20Contract(address).balanceOf(
-      metamask.account
-    );
-    console.log("balance", balance);
-
-    return ethers.BigNumber.from(balance);
-  };
-
-  const addLiquidity = async (tokenAddress: string, amount: string) => {
-    const depositAmount = ethers.utils.parseEther(amount);
-    console.log("depositAmount", depositAmount);
-
-    const approve = await approveTokenToLiquidityPool(
-      tokenAddress,
-      depositAmount.toString()
-    );
-
-    console.log("approve", approve);
-
-    const addLP = await addLiquidityOfToken(
-      tokenAddress,
-      depositAmount.toString()
-    );
-
-    console.log("addLiquidity", addLP);
-  };
-
-  const removeLiquidity = async (tokenAddress: string, amount: string) => {
-    const withdrawAmount = ethers.utils.parseEther(amount);
-    const addLP = await removeLiquidityOfToken(
-      tokenAddress,
-      withdrawAmount.toString()
-    );
-
-    console.log("addLiquidity", addLP);
-  };
-
-  const getLiquidityOfUser = async (address: string) => {
-    return _getLiquidityPoolContract().getLiquidityOfUser(
-      metamask.account,
-      address
-    );
+    return protocol
+      .removeLiquidity(token.address, amount)
+      .then(() => fetchTokenBalance())
+      .then(() => fetchTokenLiquidityOfUser())
+      .finally(() => setRemoveLiquidityLoading(false));
   };
 
   return {
-    chain,
-    account: metamask.account,
-    addChain: metamask.addChain,
-    switchChain,
-    sourceProvider,
-    getTokenBalanceOfCurrentAccount,
+    ...metamask,
+    ...protocol,
+    fetchTokenBalance,
+    fetchTokenLiquidityOfUser,
     addLiquidity,
     removeLiquidity,
-    getLiquidityOfUser,
   };
 };
 
