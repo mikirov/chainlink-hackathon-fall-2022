@@ -4,9 +4,9 @@ import { useConnectedMetaMask } from "metamask-react";
 
 import ERC20Abi from "../abi/ERC20.json";
 import LiquidityPoolAbi from "../abi/LiquidityPool.json";
+import { LiquidityPool } from "../abi/LiquidityPool";
 
 import config, { type Chain } from "../config";
-import { LiquidityPool } from "../abi/LiquidityPool";
 
 export type UseWeb3 = {
   chain: Chain;
@@ -18,10 +18,12 @@ export type UseWeb3 = {
     address: string
   ) => Promise<ethers.BigNumber>;
   addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
+  removeLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
   getLiquidityOfUser: (token: string) => Promise<any>;
 };
 const useWeb3 = (): UseWeb3 => {
   const metamask = useConnectedMetaMask();
+
   const [chain, setChain] = React.useState<Chain>(
     config.chains[metamask.chainId]
   );
@@ -66,6 +68,12 @@ const useWeb3 = (): UseWeb3 => {
     return addLiquidityTransaction.wait();
   };
 
+  const removeLiquidityOfToken = async (token: string, amount: string) => {
+    const removeLiquidityTransaction =
+      await _getLiquidityPoolContract().removeLiquidity(token, amount);
+    return removeLiquidityTransaction.wait();
+  };
+
   const switchChain = (id: string) =>
     metamask
       .switchChain(id)
@@ -83,19 +91,29 @@ const useWeb3 = (): UseWeb3 => {
   };
 
   const addLiquidity = async (tokenAddress: string, amount: string) => {
-    const depositBalance = ethers.utils.parseEther(amount);
-    console.log("depositBalance", depositBalance);
+    const depositAmount = ethers.utils.parseEther(amount);
+    console.log("depositAmount", depositAmount);
 
     const approve = await approveTokenToLiquidityPool(
       tokenAddress,
-      depositBalance.toString()
+      depositAmount.toString()
     );
 
     console.log("approve", approve);
 
     const addLP = await addLiquidityOfToken(
       tokenAddress,
-      depositBalance.toString()
+      depositAmount.toString()
+    );
+
+    console.log("addLiquidity", addLP);
+  };
+
+  const removeLiquidity = async (tokenAddress: string, amount: string) => {
+    const withdrawAmount = ethers.utils.parseEther(amount);
+    const addLP = await removeLiquidityOfToken(
+      tokenAddress,
+      withdrawAmount.toString()
     );
 
     console.log("addLiquidity", addLP);
@@ -116,6 +134,7 @@ const useWeb3 = (): UseWeb3 => {
     sourceProvider,
     getTokenBalanceOfCurrentAccount,
     addLiquidity,
+    removeLiquidity,
     getLiquidityOfUser,
   };
 };

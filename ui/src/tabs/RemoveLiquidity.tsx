@@ -17,25 +17,32 @@ import PrimaryButton from "../components/PrimaryButton";
 import { UseWeb3 } from "../hooks/useWeb3";
 import useNotification from "../hooks/useNotification";
 
-type AddLiquidityProps = { web3: UseWeb3 };
-const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
+type RemoveLiquidityProps = { web3: UseWeb3 };
+const RemoveLiquidity: React.FunctionComponent<RemoveLiquidityProps> = ({
+  web3,
+}) => {
   const [token, setToken] = React.useState<Token>(config.tokens[0]);
   const [tokenBalance, setTokenBalance] = React.useState("0");
   const [tokenBalanceInput, setTokenBalanceInput] = React.useState("");
   const [tokenLiquidityOfUser, setTokenLiquidityOfUser] = React.useState("0");
   const [tokenBalanceLoading, setTokenBalanceLoading] = React.useState(false);
-  const [addLiquidityLoading, setAddLiquidityLoading] = React.useState(false);
   const [tokenLiquidityOfUserLoading, setTokenLiquidityOfUserLoading] =
+    React.useState(false);
+  const [removeLiquidityLoading, setRemoveLiquidityLoading] =
     React.useState(false);
 
   const { showError, showSuccess } = useNotification();
-  console.log("add");
+
   const tokenBalanceInputError = React.useMemo(() => {
     const balance = Number(tokenBalanceInput);
     return (
-      Number.isNaN(balance) || balance === 0 || balance > Number(tokenBalance)
+      Number.isNaN(balance) ||
+      balance === 0 ||
+      balance > Number(tokenLiquidityOfUser)
     );
   }, [tokenBalanceInput]);
+
+  console.log("remove");
 
   React.useEffect(() => {
     fetchTokenBalance_();
@@ -66,18 +73,18 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
       .finally(() => setTokenBalanceLoading(false));
   };
 
-  const addLiquidity = () => {
-    setAddLiquidityLoading(true);
+  const removeLiquidity = () => {
+    setRemoveLiquidityLoading(true);
 
     web3
-      .addLiquidity(token.address, tokenBalanceInput)
+      .removeLiquidity(token.address, tokenBalanceInput)
       .then(() => fetchTokenBalance_())
       .then(() => fetchTokenLiquidityOfUser_())
       .then(() => setTokenBalanceInput(""))
-      .finally(() => setAddLiquidityLoading(false))
+      .finally(() => setRemoveLiquidityLoading(false))
       .then(() =>
         showSuccess(
-          `You have added ${tokenBalanceInput} ${token.name} to the liquidity pool`
+          `You have removed ${tokenBalanceInput} ${token.name} from the liquidity pool`
         )
       )
       .catch((error) => showError(error.reason));
@@ -113,7 +120,9 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
                   h="1.75rem"
                   size="sm"
                   onClick={() =>
-                    setTokenBalanceInput(Number(tokenBalance).toString())
+                    setTokenBalanceInput(
+                      Number(tokenLiquidityOfUser).toString()
+                    )
                   }
                 >
                   MAX
@@ -138,16 +147,16 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
         <PrimaryButton
           mt={4}
           width="full"
-          isLoading={addLiquidityLoading}
-          loadingText="Adding liquidity..."
-          disabled={addLiquidityLoading || tokenBalanceInputError}
-          onClick={addLiquidity}
+          isLoading={removeLiquidityLoading}
+          loadingText="Removing liquidity..."
+          disabled={removeLiquidityLoading || tokenBalanceInputError}
+          onClick={removeLiquidity}
         >
-          Add Liquidity
+          Remove Liquidity
         </PrimaryButton>
       </>
     </Flex>
   );
 };
 
-export default AddLiquidity;
+export default RemoveLiquidity;

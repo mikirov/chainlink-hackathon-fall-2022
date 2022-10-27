@@ -4,6 +4,7 @@ import { Box, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import useWeb3 from "../hooks/useWeb3";
 import Bridge from "../tabs/Bridge";
 import AddLiquidity from "../tabs/AddLiquidity";
+import RemoveLiquidity from "../tabs/RemoveLiquidity";
 
 type ConnectedProps = {};
 const Connected: React.FunctionComponent<ConnectedProps> = () => {
@@ -25,7 +26,7 @@ const Connected: React.FunctionComponent<ConnectedProps> = () => {
             <AddLiquidity web3={web3} />
           </TabPanel>
           <TabPanel pt={8}>
-            <p>Remove Liquidity</p>
+            <RemoveLiquidity web3={web3} />
           </TabPanel>
         </TabPanels>
       </Tabs>
