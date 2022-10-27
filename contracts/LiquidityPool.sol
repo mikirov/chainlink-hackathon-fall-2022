@@ -9,9 +9,14 @@ contract LiquidityPool is AccessControl {
     /// account => token => amount
     mapping(address => mapping(address => uint)) public liquidityOfUser;
 
+
+    struct UnlockRequest {
+        uint256 amount;
+        uint256 sourcePoolLiquidityAmount;
+    }
     /// @notice mapping that holds the total amount of tokens, the user has bridged but still not withdrawn
     /// account => token => amount
-    mapping(address => mapping(address => uint)) public bridgedTokensOfUser;
+    mapping(address => mapping(address => UnlockRequest)) public bridgedTokensOfUser;
 
     address public bridge;
 
@@ -55,14 +60,8 @@ contract LiquidityPool is AccessControl {
         return liquidityOfUser[user][token];
     }
 
-    modifier updateReward(address account, address token, uint256 amount) {
-        _;
-
-
-    }
-
     /// @notice function that increases liquidity for a given token
-    function addLiquidity(address token, uint amount) updateReward(msg.sender, token, amount) external {
+    function addLiquidity(address token, uint256 amount) external {
         bool status = IERC20(token).transferFrom(
             msg.sender,
             address(this),
@@ -109,7 +108,7 @@ contract LiquidityPool is AccessControl {
         public
         returns (uint)
     {
-        uint withdrawableAmount = bridgedTokensOfUser[user][token];
+        uint withdrawableAmount = bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount;
 
         if (getLiquidityOfToken(token) < withdrawableAmount) {
             withdrawableAmount = getLiquidityOfToken(token);
@@ -122,13 +121,15 @@ contract LiquidityPool is AccessControl {
     function addBridgedToken(
         address user,
         address token,
-        uint amount
+        uint amount,
+        uint256 sourcePoolLiquidityAmount
     ) external onlyRole(BRIDGE_ROLE) {
-        bridgedTokensOfUser[user][token] += amount;
+        bridgedTokensOfUser[user][token].amount += amount;
+        bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount = sourcePoolLiquidityAmount;
     }
 
     /// @notice function that withdraws all available bridged token amount for a given user
-    function withdrawBridgedToken(address user, address token, uint256 sourcePoolLiquidityAmount)
+    function withdrawBridgedToken(address user, address token)
         external
         onlyRole(BRIDGE_ROLE)
         returns (uint amount)
@@ -143,6 +144,7 @@ contract LiquidityPool is AccessControl {
 
         /// @dev here destination liquidity amount is guaranteed to be greater than 0
         uint256 destinationPoolLiquidityAmount = getLiquidityOfToken(token);
+        uint256 sourcePoolLiquidityAmount = bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount;
 
         uint256 totalReward = (withdrawableTokenAmountBeforeTax * baseFeePercent) / 100;
         
@@ -160,7 +162,7 @@ contract LiquidityPool is AccessControl {
         
         uint256 withdrawableTokenAmountAfterTax = withdrawableTokenAmountBeforeTax - totalReward;
         
-        bridgedTokensOfUser[user][token] -= withdrawableTokenAmountAfterTax;
+        bridgedTokensOfUser[user][token].amount -= withdrawableTokenAmountAfterTax;
 
         bool status = IERC20(token).transfer(user, withdrawableTokenAmountAfterTax);
         require(status);

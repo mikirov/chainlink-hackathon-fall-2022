@@ -103,10 +103,10 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
         uint256 amount,
         uint256 sourcePoolLiquidityAmount
     ) public onlyTunnel {
-        liquidityPool.addBridgedToken(user, token, amount);
+        liquidityPool.addBridgedToken(user, token, amount, sourcePoolLiquidityAmount);
 
         // make sure the transaction will never revert
-        try liquidityPool.withdrawBridgedToken(user, token, sourcePoolLiquidityAmount) returns (
+        try liquidityPool.withdrawBridgedToken(user, token) returns (
             uint amount
         ) {
             emit BridgedTokenWithdrawn(amount);
