@@ -1,4 +1,4 @@
-import { ethers, upgrades } from "hardhat";
+import { ethers, } from "hardhat";
 
 export async function deployToken() {
     const [ethereumSigner] = await ethers.getSigners();
@@ -6,6 +6,8 @@ export async function deployToken() {
 	const tokenFactory = await ethers.getContractFactory("TestBridgedToken", ethereumSigner);
 	const token = await tokenFactory.deploy("TestBridgedToken", "TST1", ownerAddress);
     await token.deployed();
+
+    console.log("Token deployed to: ", token.address);
 
     await token.mint(ownerAddress, ethers.utils.parseEther("100000", "ether"));
 
