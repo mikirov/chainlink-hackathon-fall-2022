@@ -44,11 +44,9 @@ export const ETHEREUM_GORLI_LIQUIDITY_POOL =
   "0x4CF99EC1E04471C8f2675Bcd8c7F49621E55720D";
 export const ETHEREUM_GORLI_BRIDGE =
   "0xb4030ed7F05489B10e0bF48C74298b89A4F67699";
-export const POLYGON_MUMBAI_LIQUIDITY_POOL =
-  "";
-export const POLYGON_MUMBAI_BRIDGE =
-  "";
-  
+export const POLYGON_MUMBAI_LIQUIDITY_POOL = "";
+export const POLYGON_MUMBAI_BRIDGE = "";
+
 export type Token = {
   id: number;
   address: string;
@@ -59,7 +57,7 @@ export type Token = {
 type ChainList = Chain[];
 type TokenList = Token[];
 type Config = {
-  supportedChains: ChainList;
+  supportedChains: string[];
   chains: { [key: string]: Chain };
   contracts: {
     [key: string]: {
@@ -71,7 +69,7 @@ type Config = {
 };
 
 const configTestnet: Config = {
-  supportedChains: [ETHEREUM_GORLI, POLYGON_MUMBAI],
+  supportedChains: [ETHEREUM_GORLI.chainId, POLYGON_MUMBAI.chainId],
   chains: {
     "0x5": ETHEREUM_GORLI,
     "0x13881": POLYGON_MUMBAI,

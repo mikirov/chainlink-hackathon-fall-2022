@@ -55,8 +55,6 @@ const RemoveLiquidity: React.FunctionComponent<RemoveLiquidityProps> = ({
     );
   }, [tokenBalanceInput]);
 
-  console.log("remove");
-
   const removeLiquidity = () => {
     web3
       .removeLiquidity(tokenBalanceInput)

@@ -21,10 +21,10 @@ type BridgeProps = {
   web3: UseWeb3;
 };
 const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
-  const chainItems = config.supportedChains.map<DropdownItem>((chain) => ({
-    id: chain.chainId,
-    name: chain.chainName,
-    image: chain.iconUrls[0],
+  const chainItems = config.supportedChains.map<DropdownItem>((chainId) => ({
+    id: config.chains[chainId].chainId,
+    name: config.chains[chainId].chainName,
+    image: config.chains[chainId].iconUrls[0],
   }));
 
   const changeSourceChain = (id: string) => {

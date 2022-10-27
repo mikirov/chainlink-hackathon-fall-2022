@@ -45,8 +45,6 @@ const AddLiquidity: React.FunctionComponent<AddLiquidityProps> = ({ web3 }) => {
 
   const { showError, showSuccess } = useNotification();
 
-  console.log("add");
-
   const tokenBalanceInputError = React.useMemo(() => {
     const balance = Number(tokenBalanceInput);
     return (

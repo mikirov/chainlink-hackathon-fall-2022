@@ -41,10 +41,12 @@ const useWeb3 = ({
     shallow
   );
 
+  // update user liquidity and token balance
+  // when token or metamask account has changed
   React.useEffect(() => {
     fetchTokenBalance();
     fetchTokenLiquidityOfUser();
-  }, [token]);
+  }, [token, metamask.account]);
 
   const fetchTokenLiquidityOfUser = async () => {
     setTokenLiquidityOfUserLoading(true);
