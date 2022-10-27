@@ -101,9 +101,9 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
         address token,
         address user,
         uint256 amount,
-        uint256 sourcePoolLiquidityAmount
+        uint256 totalRemoteLiquidity
     ) public onlyTunnel {
-        liquidityPool.addBridgedToken(user, token, amount, sourcePoolLiquidityAmount);
+        liquidityPool.addBridgedToken(user, token, amount, totalRemoteLiquidity);
 
         // make sure the transaction will never revert
         try liquidityPool.withdrawBridgedToken(user, token) returns (

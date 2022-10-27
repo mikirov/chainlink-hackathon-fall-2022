@@ -9,14 +9,15 @@ contract LiquidityPool is AccessControl {
     /// account => token => amount
     mapping(address => mapping(address => uint)) public liquidityOfUser;
 
-
-    struct UnlockRequest {
-        uint256 amount;
-        uint256 sourcePoolLiquidityAmount;
-    }
     /// @notice mapping that holds the total amount of tokens, the user has bridged but still not withdrawn
     /// account => token => amount
-    mapping(address => mapping(address => UnlockRequest)) public bridgedTokensOfUser;
+    mapping(address => mapping(address => uint)) public bridgedTokensOfUser;
+
+    /// @notice mapping that holds the total liquidity of a given token on the other chain
+    mapping(address => uint) => public remoteLiquidityOfToken;
+
+    /// @notice mapping that holds the total liquidity of a given token on the current chain
+    mapping(address => uint) => public thisLiquidityOfToken;
 
     address public bridge;
 
@@ -37,7 +38,10 @@ contract LiquidityPool is AccessControl {
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
     }
 
-    function setBaseFeePercentage(uint256 _baseFeePercent) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setBaseFeePercentage(uint256 _baseFeePercent)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
         baseFeePercent = _baseFeePercent;
     }
 
@@ -78,8 +82,7 @@ contract LiquidityPool is AccessControl {
         if (
             getLiquidityOfToken(token) < amount ||
             getLiquidityOfUser(msg.sender, token) < amount
-        )
-            revert InsufficientLiquidity(amount);
+        ) revert InsufficientLiquidity(amount);
 
         liquidityOfUser[msg.sender][token] -= amount;
 
@@ -87,15 +90,13 @@ contract LiquidityPool is AccessControl {
     }
 
     function withdrawRewards(address token) external {
-        
         uint256 userLiquidity = getLiquidityOfUser(msg.sender, token);
-        if(userLiquidity == 0) 
-            revert InsufficientLiquidity(0);
-        
+        if (userLiquidity == 0) revert InsufficientLiquidity(0);
+
         uint256 userShareOfRewards = getLiquidityOfToken(token) / userLiquidity;
-        uint256 amountToWithdraw = (totalRewards[token] * userShareOfRewards / userShareOfRewards) - userClaimedRewards[msg.sender][token];
-        if(amountToWithdraw <= 0) 
-            revert NoRewardsToWithdraw();
+        uint256 amountToWithdraw = ((totalRewards[token] * userShareOfRewards) /
+            userShareOfRewards) - userClaimedRewards[msg.sender][token];
+        if (amountToWithdraw <= 0) revert NoRewardsToWithdraw();
 
         totalRewards[token] -= amountToWithdraw;
         userClaimedRewards[msg.sender][token] += amountToWithdraw;
@@ -108,7 +109,11 @@ contract LiquidityPool is AccessControl {
         public
         returns (uint)
     {
-        uint withdrawableAmount = bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount;
+        uint withdrawableAmount = bridgedTokensOfUser[user][token];
+
+        if (getLiquidityOfToken(token) < totalRewards) {
+            withdrawableAmount = 0;
+        }
 
         if (getLiquidityOfToken(token) < withdrawableAmount) {
             withdrawableAmount = getLiquidityOfToken(token);
@@ -122,10 +127,10 @@ contract LiquidityPool is AccessControl {
         address user,
         address token,
         uint amount,
-        uint256 sourcePoolLiquidityAmount
+        uint256 totalRemoteLiquidity
     ) external onlyRole(BRIDGE_ROLE) {
-        bridgedTokensOfUser[user][token].amount += amount;
-        bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount = sourcePoolLiquidityAmount;
+        bridgedTokensOfUser[user][token] += amount;
+        remoteLiquidityOfToken[token] = totalRemoteLiquidity;
     }
 
     /// @notice function that withdraws all available bridged token amount for a given user
@@ -134,38 +139,47 @@ contract LiquidityPool is AccessControl {
         onlyRole(BRIDGE_ROLE)
         returns (uint amount)
     {
-        uint256 withdrawableTokenAmountBeforeTax = getWithdrawableBridgedTokenAmount(
-            user,
-            token
-        );
+        uint256 maxAvailableToWithdraw = getWithdrawableBridgedTokenAmount(
+                user,
+                token
+            );
 
-        if (withdrawableTokenAmountBeforeTax <= 0) 
-            return withdrawableTokenAmountBeforeTax;
+        if (maxAvailableToWithdraw <= 0)
+            return 0;
 
         /// @dev here destination liquidity amount is guaranteed to be greater than 0
-        uint256 destinationPoolLiquidityAmount = getLiquidityOfToken(token);
-        uint256 sourcePoolLiquidityAmount = bridgedTokensOfUser[user][token].sourcePoolLiquidityAmount;
+        uint256 thisLiquidityAmount = getLiquidityOfToken(token);
+        uint256 remoteLiquidityAmount = remoteLiquidityOfToken[token];
 
-        uint256 totalReward = (withdrawableTokenAmountBeforeTax * baseFeePercent) / 100;
-        
-        uint256 liquidityRatio;
-        if(sourcePoolLiquidityAmount > destinationPoolLiquidityAmount) {
-            liquidityRatio = sourcePoolLiquidityAmount / destinationPoolLiquidityAmount;
-        } else {
-            liquidityRatio = destinationPoolLiquidityAmount / sourcePoolLiquidityAmount;
+        // fee per token bridge
+        uint256 feePercent = baseFeePercent;
+        // if remote chain has more liquidity than the current chain
+        // stimulate the liquidity provders on the current chain with more fee %
+        // if the difference is 4:1 - the fee would be 4*baseFeePercent = ~4%
+        if (remoteLiquidityAmount > thisLiquidityAmount) {
+            feePercent =
+                remoteLiquidityAmount /
+                thisLiquidityAmount * baseFeePercent;
+            // 10% is the max cap of fee
+            feePercent = feePercent >= 10 ? 10 : feePercent;
         }
 
-        uint256 rewardForProviders = liquidityRatio * totalReward / totalReward;
-        uint256 rewardForBridge = totalReward - rewardForProviders;
-        
-        totalRewards[token] += rewardForProviders;
-        
-        uint256 withdrawableTokenAmountAfterTax = withdrawableTokenAmountBeforeTax - totalReward;
-        
-        bridgedTokensOfUser[user][token].amount -= withdrawableTokenAmountAfterTax;
+        // calculates what is the bridge ratio vs all stakers
+        uint256 bridgeLPRatio = thisLiquidityOfToken[token] / liquidityOfUser[address(this)];
+        // total fee to take from the bridged amount
+        uint256 totalFeeAmount = (maxAvailableToWithdraw * feePercent) / 100;
 
-        bool status = IERC20(token).transfer(user, withdrawableTokenAmountAfterTax);
+        // distribute the fee reward to the bridge and all stakers, based on the amount of liquidity provided by each
+        uint256 bridgeReward = totalFeeAmount / bridgeLPRatio;
+        uint256 stakersReward = totalFeeAmount - bridgeReward;
+
+        totalRewards[token] += totalFeeAmount;
+        bridgedTokensOfUser[user][token] -= maxAvailableToWithdraw;
+
+        bool status = IERC20(token).transfer(
+            user,
+            maxAvailableToWithdraw - totalFeeAmount
+        );
         require(status);
-
     }
 }
