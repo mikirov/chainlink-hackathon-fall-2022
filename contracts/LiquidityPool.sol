@@ -28,6 +28,8 @@ contract LiquidityPool is AccessControl {
     /// @notice token to total reward for that token
     mapping(address => uint256) public totalRewards;
 
+    uint256 public liquidityLockUpPeriod = 7 days;
+
     bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
 
     error TransferFailed(address token, uint amount);
@@ -48,6 +50,11 @@ contract LiquidityPool is AccessControl {
     function setBridge(address _bridge) external onlyRole(DEFAULT_ADMIN_ROLE) {
         bridge = _bridge;
         _grantRole(BRIDGE_ROLE, _bridge);
+    }
+
+    function setLiquidityLockUpPeriod(uint256 period) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        liquidityLockUpPeriod = period;
     }
 
     /// @notice function that returns the total liquidity for a given token
@@ -71,9 +78,12 @@ contract LiquidityPool is AccessControl {
             address(this),
             amount
         );
-        if (status == false) revert TransferFailed(token, amount);
+        if (status == false) 
+            revert TransferFailed(token, amount);
 
-        liquidityOfUser[msg.sender][token] += amount;
+        liquidityOfUser[msg.sender][token].amount += amount;
+        liquidityOfUser[msg.sender][token].lockUpEnd = block.timestamp + liquidityLockUpPeriod;
+        
     }
 
     /// @dev TODO: rework this function
@@ -84,9 +94,10 @@ contract LiquidityPool is AccessControl {
             getLiquidityOfUser(msg.sender, token) < amount
         ) revert InsufficientLiquidity(amount);
 
-        liquidityOfUser[msg.sender][token] -= amount;
+        liquidityOfUser[msg.sender][token].amount -= amount;
 
-        IERC20(token).transfer(msg.sender, amount);
+        bool status = IERC20(token).transfer(msg.sender, amount);
+        require(status);
     }
 
     function withdrawRewards(address token) external {
@@ -101,7 +112,8 @@ contract LiquidityPool is AccessControl {
         totalRewards[token] -= amountToWithdraw;
         userClaimedRewards[msg.sender][token] += amountToWithdraw;
 
-        IERC20(token).transfer(msg.sender, amountToWithdraw);
+        bool status = IERC20(token).transfer(msg.sender, amountToWithdraw);
+        require(status);
     }
 
     /// @notice function that returns total bridged token amount available to withdraw
