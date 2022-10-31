@@ -10,10 +10,12 @@ import "./LiquidityPool.sol";
 import "./TokenMapping.sol";
 import "./CrossChainUpgradable.sol";
 
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
-    mapping(address => mapping(address => uint256)) public withdrawable;
+    using SafeERC20 for IERC20;
 
     event BridgedTokenWithdrawn(uint256 amount);
 
@@ -29,7 +31,7 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
         address _tunnel,
         address _liquidityPool,
         address _tokenMapping
-    ) public initializer{
+    ) public initializer {
         __CrossChain_init(_tunnel);
         __Ownable_init();
         liquidityPool = LiquidityPool(_liquidityPool);
@@ -54,24 +56,19 @@ contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
         address destinationToken = tokenMapping.tokenMap(sourceToken);
 
         /// @notice if the destination token is address(0) it is not supported, we revert
-        if(destinationToken == address(0)) {
+        if (destinationToken == address(0)) {
             revert TokenNotSupported(sourceToken);
         }
 
         /// @dev Deposit ERC20 to the bridge and then directly from the bridge to the LP
-        /// the way the bridge earns commission is by taking LP rewards from the LP like other LP providers
-        bool status = IERC20(sourceToken).transferFrom(
-            msg.sender,
-            address(this),
-            amount
-        );
-        require(status);
-
-        IERC20(sourceToken).approve(address(liquidityPool), amount);
-        liquidityPool.addLiquidity(sourceToken, amount);
+        /// the bridged tokens are injected directly as a liquidity to LP
+        IERC20(sourceToken).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(sourceToken).safeTransfer(address(liquidityPool), amount);
 
         /// @dev we send the request to the other chain with the address of the destination token
-        _sendMessage(_unlockBridgedTokenRequest(destinationToken, msg.sender, amount));
+        _sendMessage(
+            _unlockBridgedTokenRequest(destinationToken, msg.sender, amount)
+        );
     }
 
     /// @notice function that withdraws all available bridged amount for a given token held by the caller

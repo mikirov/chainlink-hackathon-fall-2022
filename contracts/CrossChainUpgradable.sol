@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "fx-portal/contracts/lib/Address.sol";
+// import "fx-portal/contracts/lib/Address.sol";
 
 import "./interfaces/IMessageReceiver.sol";
 import "./interfaces/IMessageSender.sol";
 
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract CrossChainUpgradable is Initializable, IMessageReceiver {
@@ -16,8 +17,7 @@ contract CrossChainUpgradable is Initializable, IMessageReceiver {
         _;
     }
 
-    function __CrossChain_init(address _tunnel) internal onlyInitializing
-    {
+    function __CrossChain_init(address _tunnel) internal onlyInitializing {
         tunnel = IMessageSender(_tunnel);
     }
 
