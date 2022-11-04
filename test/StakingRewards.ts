@@ -81,12 +81,24 @@ describe("StakingRewards", async function () {
   };
 
   describe("Math", () => {
+    // - no staked
+    // - no rewards
     it(`Alice should have earned 0 rewards`, async () => {
       const noRewards = await getRewardsOf(alice, WETH);
 
       assertDecimals(noRewards, 0);
     });
+    // - no staked
+    // - no rewards
     it(`should calculate 0 rewards for Alice`, async () => {
+      const noRewards = await calculateRewardsOf(alice, WETH);
+
+      assertDecimals(noRewards, 0);
+    });
+    // Alice stake - 100
+    // - no rewards
+    it(`should calculate 0 rewards for Alice`, async () => {
+      await stake(alice, WETH, 100);
       const noRewards = await calculateRewardsOf(alice, WETH);
 
       assertDecimals(noRewards, 0);
