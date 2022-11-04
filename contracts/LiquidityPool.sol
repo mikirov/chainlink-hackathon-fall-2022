@@ -89,14 +89,14 @@ contract LiquidityPool is AccessControl, StakingRewards {
     function claimRewards(address token) external {
         (, uint rewards) = calculateRewardsOf(token, msg.sender);
 
+        rewards = getMaxWithdrawableAmount(token, rewards);
+
         if (rewards <= 0) {
             revert NothingToWithdraw();
         }
         if (getLiquidityOfToken(token) <= 0) {
             revert InsufficientLiquidity(rewards);
         }
-
-        rewards = getMaxWithdrawableAmount(token, rewards);
 
         _claimRewards(token, rewards);
 
