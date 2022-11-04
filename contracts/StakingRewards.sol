@@ -32,7 +32,7 @@ abstract contract StakingRewards {
             token,
             msg.sender
         );
-        // reward per token could be zero only when total staked amount is also zero
+        // reward per token could be zero only when total staked amount is also zero or there is no rewards to distribute
         if (_rewardPerToken > 0) {
             rewardPerToken[token] = _rewardPerToken;
             earnedRewardsOf[token][msg.sender] = _rewardsOfUser;
