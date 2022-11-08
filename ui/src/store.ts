@@ -18,7 +18,7 @@ type ProtocolState = {
   setRemoveLiquidityLoading: (loading: boolean) => void;
 };
 const useProtocolStore = create<ProtocolState>((set) => ({
-  token: config.tokens[0],
+  token: config.tokens["0x5"][0],
   tokenBalance: "0",
   tokenLiquidityOfUser: "0",
   tokenBalanceLoading: false,

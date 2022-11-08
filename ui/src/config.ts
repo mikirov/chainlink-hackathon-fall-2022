@@ -39,6 +39,7 @@ export const POLYGON_MUMBAI: Chain = {
 };
 
 export const ETHEREUM_GORLI_TST1 = "0x011C1B8a25e4f309e78f717cF021939c4b5f2E6F";
+export const POLYGON_MUMBAI_TST1 = "0x565A39628964995F1D74502d03838b42E280b18b";
 
 export const ETHEREUM_GORLI_LIQUIDITY_POOL =
   "0x4CF99EC1E04471C8f2675Bcd8c7F49621E55720D";
@@ -65,7 +66,7 @@ type Config = {
       BRIDGE: string;
     };
   };
-  tokens: TokenList;
+  tokens: { [key: string]: TokenList };
 };
 
 const configTestnet: Config = {
@@ -74,13 +75,22 @@ const configTestnet: Config = {
     "0x5": ETHEREUM_GORLI,
     "0x13881": POLYGON_MUMBAI,
   },
-  tokens: [
-    {
-      id: 1,
-      address: ETHEREUM_GORLI_TST1,
-      name: "TST1",
-    },
-  ],
+  tokens: {
+    "0x5": [
+      {
+        id: 1,
+        address: ETHEREUM_GORLI_TST1,
+        name: "TST1",
+      },
+    ],
+    "0x13881": [
+      {
+        id: 1,
+        address: POLYGON_MUMBAI_TST1,
+        name: "TST2",
+      },
+    ],
+  },
   contracts: {
     "0x5": {
       LIQUIDITY_POOL: ETHEREUM_GORLI_LIQUIDITY_POOL,

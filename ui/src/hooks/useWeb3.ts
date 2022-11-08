@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import React from "react";
 import shallow from "zustand/shallow";
+import config from "../config";
 
 import useProtocolStore from "../store";
 import { type UseMetamask } from "./useMetamask";
@@ -22,6 +23,7 @@ const useWeb3 = ({
 }): UseWeb3 => {
   const [
     token,
+    setToken,
     setTokenBalance,
     setTokenLiquidityOfUser,
     setTokenBalanceLoading,
@@ -31,6 +33,7 @@ const useWeb3 = ({
   ] = useProtocolStore(
     (state) => [
       state.token,
+      state.setToken,
       state.setTokenBalance,
       state.setTokenLiquidityOfUser,
       state.setTokenBalanceLoading,
@@ -41,6 +44,9 @@ const useWeb3 = ({
     shallow
   );
 
+  React.useEffect(() => {
+    setToken(config.tokens[metamask.chain.chainId][0]);
+  }, [metamask.chain]);
   // update user liquidity and token balance
   // when token or metamask account has changed
   React.useEffect(() => {

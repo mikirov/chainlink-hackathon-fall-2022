@@ -7,6 +7,7 @@ import AddLiquidity from "../tabs/AddLiquidity";
 import RemoveLiquidity from "../tabs/RemoveLiquidity";
 import useProtocol from "../hooks/useProtocol";
 import useWeb3 from "../hooks/useWeb3";
+import Facet from "../tabs/Facet";
 
 type ConnectedProps = {};
 const Connected: React.FunctionComponent<ConnectedProps> = () => {
@@ -24,6 +25,7 @@ const Connected: React.FunctionComponent<ConnectedProps> = () => {
           <Tab>Bridge</Tab>
           <Tab>Add Liquidity</Tab>
           <Tab>Remove Liquidity</Tab>
+          <Tab>Facet</Tab>
         </TabList>
         <TabPanels>
           <TabPanel pt={8}>
@@ -34,6 +36,9 @@ const Connected: React.FunctionComponent<ConnectedProps> = () => {
           </TabPanel>
           <TabPanel pt={8}>
             <RemoveLiquidity web3={web3} />
+          </TabPanel>
+          <TabPanel pt={8}>
+            <Facet web3={web3} />
           </TabPanel>
         </TabPanels>
       </Tabs>

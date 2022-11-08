@@ -108,8 +108,8 @@ const RemoveLiquidity: React.FunctionComponent<RemoveLiquidityProps> = ({
             </InputGroup>
             <Box ml="2">
               <Dropdown
-                items={config.tokens}
-                defaultSelected={config.tokens[0]}
+                items={config.tokens[web3.chain.chainId]}
+                defaultSelected={config.tokens[web3.chain.chainId][0]}
                 onItemChange={(item) => setToken(item)}
               />
             </Box>
