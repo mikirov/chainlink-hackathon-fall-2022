@@ -14,6 +14,26 @@
       "address": "0xa0441E7Eefe28eb4bAbd39A9481e878E3eE0E60d",
       "txHash": "0x0a50c523246d1f0a2af251cbcc3f0702acc1be40aae8a3e8a30af0e7627ad2a9",
       "kind": "transparent"
+    },
+    {
+      "address": "0x9D3bc673290d4b9fe2Db75abB8F7f9F252d8523A",
+      "txHash": "0x50641a357b8b58002712fbbff4fc3979df10e69456e40c994f93150cde378f95",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x00FdE763508EA399B5acA1b04a428f645c4201d4",
+      "txHash": "0xff5d05b548e332d97635eb8a6fb7d539bf12e1e15202755a9fcff4b5e3cf5b78",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x25dd824e6b303b7905C89518c6Fce1A09864C56d",
+      "txHash": "0x2c42f893dbc018794ccfe12822158ae8ea31e071dc8af27c3b44b605a9d67770",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x7923bd7236eA179B6d49F6ce5151B695a40bf688",
+      "txHash": "0xbdf04421980c9ef2eec47c39cfebb5f4ed698a78f4bc28b9eea138bc292a091a",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -121,6 +141,118 @@
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "ee55ea95ec47bcd291c741732bd34e0bccc63e7ada0bdb283457196dc98733b4": {
+      "address": "0xaF8f478c06c93DFA85BD207aD7AF24FCF2eafa4E",
+      "txHash": "0x07c942d6e178fd9a26c3d0ddfb77aed31997eb07712bd7bef1459f0a95a83ca8",
+      "layout": {
+        "solcVersion": "0.8.17",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "tunnel",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IMessageSender)3118",
+            "contract": "CrossChainUpgradable",
+            "src": "contracts/CrossChainUpgradable.sol:13"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "liquidityPool",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_contract(LiquidityPool)2761",
+            "contract": "Bridge",
+            "src": "contracts/Bridge.sol:26"
+          },
+          {
+            "label": "tokenMapping",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_contract(TokenMapping)3090",
+            "contract": "Bridge",
+            "src": "contracts/Bridge.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IMessageSender)3118": {
+            "label": "contract IMessageSender",
+            "numberOfBytes": "20"
+          },
+          "t_contract(LiquidityPool)2761": {
+            "label": "contract LiquidityPool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(TokenMapping)3090": {
+            "label": "contract TokenMapping",
+            "numberOfBytes": "20"
           },
           "t_uint256": {
             "label": "uint256",

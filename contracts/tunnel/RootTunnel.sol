@@ -30,7 +30,7 @@ contract RootTunnel is FxBaseRootTunnel, IMessageSender, Ownable {
     function _processMessageFromChild(bytes memory data) internal override {
         latestData = data;
 
-        parent.receiveMessage(data);
+        // parent.receiveMessage(data);
     }
 
     function sendMessage(bytes memory message) external virtual onlyParent {

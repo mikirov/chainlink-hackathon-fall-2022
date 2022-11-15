@@ -49,7 +49,7 @@ const main = async () => {
     });
     // Polygon -> Ethereum transaction hash
     const txHash =
-      "0xb22eea1b52371c38befa0964dd0d4bd09fef8c4aa5e2ab08e9738ecccb09b808";
+      "0x2a751a92f34723683256f0a8684cc2f6991e547a1b4db52093c1510fbc3d2bc6";
     // it takes up to 1 hour
     const isCheckpointed = await client.isCheckPointed(txHash);
 
