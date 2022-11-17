@@ -1,3 +1,5 @@
+pragma solidity ^0.8.17;
+
 /// @notice Bridge contract, deployed on each chain
 interface IBridge {
     /// @notice method that locks tokens

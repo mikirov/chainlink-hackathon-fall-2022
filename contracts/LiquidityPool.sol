@@ -2,23 +2,33 @@
 pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract LiquidityPool is AccessControl {
+import "./StakingRewards.sol";
+
+contract LiquidityPool is AccessControl, StakingRewards {
+    using SafeERC20 for IERC20;
+
+    uint256 public constant PERCENT_DECIMALS = 100; // 0 decimals (1-100%)
+    uint256 public constant PROTOCOL_PERCENT_FEE = 1; // % fee per each token bridge
+
     /// @notice mapping that holds the total liquidity added by an account
     /// account => token => amount
-    mapping(address => mapping(address => uint)) public liquidityOfUser;
+    mapping(address => mapping(address => uint)) public liquidityOfProvider;
+    /// @notice mapping that tracks the earned rewards of a liquidity provider
 
     /// @notice mapping that holds the total amount of tokens, the user has bridged but still not withdrawn
     /// account => token => amount
     mapping(address => mapping(address => uint)) public bridgedTokensOfUser;
 
+    /// @notice the address of the bridge
     address public bridge;
 
     bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
 
-    error TransferFailed(address token, uint amount);
     error InsufficientLiquidity(uint amount);
+    error NothingToWithdraw();
 
     constructor(address owner) {
         _grantRole(DEFAULT_ADMIN_ROLE, owner);
@@ -40,23 +50,27 @@ contract LiquidityPool is AccessControl {
         view
         returns (uint)
     {
-        return liquidityOfUser[user][token];
+        return liquidityOfProvider[user][token];
+    }
+
+    function getMaxWithdrawableAmount(address token, uint amount)
+        public
+        view
+        returns (uint)
+    {
+        uint liquidity = getLiquidityOfToken(token);
+        return liquidity <= amount ? liquidity : amount;
     }
 
     /// @notice function that increases liquidity for a given token
     function addLiquidity(address token, uint amount) external {
-        bool status = IERC20(token).transferFrom(
-            msg.sender,
-            address(this),
-            amount
-        );
+        liquidityOfProvider[msg.sender][token] += amount;
+        _stake(token, amount);
 
-        liquidityOfUser[msg.sender][token] += amount;
-
-        if (status == false) revert TransferFailed(token, amount);
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
     }
 
-    /// @notice function that decreases liquidity for a given token
+    /// @notice function that decreases liquidity for a liquidity provider
     function removeLiquidity(address token, uint amount) external {
         if (
             getLiquidityOfToken(token) < amount ||
@@ -65,23 +79,28 @@ contract LiquidityPool is AccessControl {
             revert InsufficientLiquidity(amount);
         }
 
-        liquidityOfUser[msg.sender][token] -= amount;
+        liquidityOfProvider[msg.sender][token] -= amount;
+        _unstake(token, amount);
 
-        IERC20(token).transfer(msg.sender, amount);
+        IERC20(token).safeTransfer(msg.sender, amount);
     }
 
-    /// @notice function that returns total bridged token amount available to withdraw
-    function getWithdrawableBridgedTokenAmount(address user, address token)
-        public
-        returns (uint)
-    {
-        uint withdrawableAmount = bridgedTokensOfUser[user][token];
+    /// @notice function that claims all earned rewards for a user
+    function claimRewards(address token) external {
+        (, uint rewards) = calculateRewardsOf(token, msg.sender);
 
-        if (getLiquidityOfToken(token) < withdrawableAmount) {
-            withdrawableAmount = getLiquidityOfToken(token);
+        rewards = getMaxWithdrawableAmount(token, rewards);
+
+        if (rewards <= 0) {
+            revert NothingToWithdraw();
+        }
+        if (getLiquidityOfToken(token) <= 0) {
+            revert InsufficientLiquidity(rewards);
         }
 
-        return withdrawableAmount;
+        _claimRewards(token, rewards);
+
+        IERC20(token).safeTransfer(msg.sender, rewards);
     }
 
     /// @notice function that increases bridged token amount for a given user
@@ -90,7 +109,11 @@ contract LiquidityPool is AccessControl {
         address token,
         uint amount
     ) external onlyRole(BRIDGE_ROLE) {
-        bridgedTokensOfUser[user][token] += amount;
+        uint256 rewardAmount = (amount * PROTOCOL_PERCENT_FEE) /
+            PERCENT_DECIMALS;
+
+        _addReward(token, rewardAmount);
+        bridgedTokensOfUser[user][token] += amount - rewardAmount;
     }
 
     /// @notice function that withdraws all available bridged token amount for a given user
@@ -99,19 +122,17 @@ contract LiquidityPool is AccessControl {
         onlyRole(BRIDGE_ROLE)
         returns (uint amount)
     {
-        uint withdrawableTokenAmount = getWithdrawableBridgedTokenAmount(
-            user,
-            token
+        uint withdrawableAmount = getMaxWithdrawableAmount(
+            token,
+            bridgedTokensOfUser[user][token]
         );
 
-        if (withdrawableTokenAmount > 0) {
-            bridgedTokensOfUser[user][token] -= withdrawableTokenAmount;
+        if (withdrawableAmount > 0) {
+            bridgedTokensOfUser[user][token] -= withdrawableAmount;
 
-            bool status = IERC20(token).transfer(user, withdrawableTokenAmount);
-
-            if (status == false) revert TransferFailed(token, amount);
+            IERC20(token).safeTransfer(user, withdrawableAmount);
         }
 
-        return withdrawableTokenAmount;
+        return withdrawableAmount;
     }
 }

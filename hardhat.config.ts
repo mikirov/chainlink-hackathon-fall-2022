@@ -1,12 +1,41 @@
 import { HardhatUserConfig, task } from "hardhat/config";
 
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomiclabs/hardhat-ethers";
+import '@openzeppelin/hardhat-upgrades';
+import "@typechain/hardhat";
 import "hardhat-interface-generator";
-import { ethers } from "ethers";
+import "hardhat-deploy";
+import "hardhat-change-network";
 
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const lazyImport = async (module: any) => {
+  return await import(module);
+};
+
+task('deploy-polygon', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployPolygon } = await lazyImport('./scripts/deploy-polygon');
+  await deployPolygon();
+});
+
+task('deploy-ethereum', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployEthereum } = await lazyImport('./scripts/deploy-ethereum');
+  await deployEthereum();
+});
+
+task('deploy-token', 'Builds and deploys the contract on the selected network', async () => {
+  const { deployToken } = await lazyImport('./scripts/deploy-token');
+  await deployToken();
+});
+
+task('deploy', 'Builds and deploys the contract on both networks', async () => {
+  // await lazyImport('hardhat-change-network');
+  const { deploy } = await lazyImport('./scripts/deploy');
+  await deploy();
+});
 
 
 task("bridge-to-polygon", "Bridge token from Ethereum to Polygon").setAction(
@@ -62,6 +91,14 @@ const config: HardhatUserConfig = {
     local_polygon: {
       url: "http://127.0.0.1:8546",
     },
+    mumbai: {
+      url: process.env.POLYGON_MUMBAI_RPC_URL,
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    },
+    goerli: {
+      url: process.env.ETHEREUM_GORLI_RPC_URL,
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY ?? '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    }
   },
 };
 

@@ -1,21 +1,41 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./interfaces/IBridge.sol";
-import "./CrossChain.sol";
-import "./LiquidityPool.sol";
+// import "hardhat/console.sol";
 
-contract Bridge is IBridge, CrossChain {
+// import "forge-std/console.sol";
+
+import "./interfaces/IBridge.sol";
+import "./LiquidityPool.sol";
+import "./TokenMapping.sol";
+import "./CrossChainUpgradable.sol";
+
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
+contract Bridge is IBridge, CrossChainUpgradable, OwnableUpgradeable {
+    using SafeERC20 for IERC20;
+
+    event BridgedTokenWithdrawn(uint256 amount);
+
+    error NoBridgeTokenToWithdraw();
+    error TokenNotSupported(address token);
+
     // address of the liquidity pool
     LiquidityPool public liquidityPool;
 
-    event BridgedTokenWithdrawn(uint amount);
+    TokenMapping public tokenMapping;
 
-    error NoBridgeTokenToWithdraw();
-
-    constructor(address _tunnel, address _liquidityPool) CrossChain(_tunnel) {
-        liquidityPool = LiquidityPool(liquidityPool);
+    function initialize(
+        address _tunnel,
+        address _liquidityPool,
+        address _tokenMapping
+    ) public initializer {
+        __CrossChain_init(_tunnel);
+        __Ownable_init();
+        liquidityPool = LiquidityPool(_liquidityPool);
+        tokenMapping = TokenMapping(_tokenMapping);
     }
 
     function _unlockBridgedTokenRequest(
@@ -32,10 +52,23 @@ contract Bridge is IBridge, CrossChain {
             );
     }
 
-    function bridgeToken(address token, uint256 amount) external {
-        // Deposit ERC20 to the bridge / LP
-        
-        _sendMessage(_unlockBridgedTokenRequest(token, msg.sender, amount));
+    function bridgeToken(address sourceToken, uint256 amount) external {
+        address destinationToken = tokenMapping.tokenMap(sourceToken);
+
+        /// @notice if the destination token is address(0) it is not supported, we revert
+        if (destinationToken == address(0)) {
+            revert TokenNotSupported(sourceToken);
+        }
+
+        /// @dev Deposit ERC20 to the bridge and then directly from the bridge to the LP
+        /// the bridged tokens are injected directly as a liquidity to LP
+        IERC20(sourceToken).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(sourceToken).safeTransfer(address(liquidityPool), amount);
+
+        /// @dev we send the request to the other chain with the address of the destination token
+        _sendMessage(
+            _unlockBridgedTokenRequest(destinationToken, msg.sender, amount)
+        );
     }
 
     /// @notice function that withdraws all available bridged amount for a given token held by the caller
@@ -73,6 +106,8 @@ contract Bridge is IBridge, CrossChain {
             uint amount
         ) {
             emit BridgedTokenWithdrawn(amount);
-        } catch {}
+        } catch {
+            // do nothing
+        }
     }
 }
