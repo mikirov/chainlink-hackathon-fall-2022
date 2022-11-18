@@ -55,7 +55,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({ web3 }) => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Box>Bridge</Box>
+            <Box>TheBridge</Box>
           </HStack>
           <Flex alignItems={"center"}>
             {web3.connected && web3.account ? (

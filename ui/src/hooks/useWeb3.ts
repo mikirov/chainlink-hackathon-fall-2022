@@ -12,6 +12,7 @@ export type UseWeb3 = {
   fetchTokenLiquidityOfUser: () => Promise<void>;
   addLiquidity: (amount: string) => Promise<void>;
   removeLiquidity: (amount: string) => Promise<void>;
+  mintTestTokens: (amount: number) => Promise<void>;
 } & UseMetamask &
   Omit<UseProtocol, "addLiquidity" | "removeLiquidity">;
 const useWeb3 = ({
@@ -98,6 +99,11 @@ const useWeb3 = ({
       .finally(() => setRemoveLiquidityLoading(false));
   };
 
+  const mintTestTokens = async (amount: number) => {
+    await protocol.mintTokens(token.address, metamask.account, amount);
+
+  }
+
   return {
     ...metamask,
     ...protocol,
@@ -105,6 +111,7 @@ const useWeb3 = ({
     fetchTokenLiquidityOfUser,
     addLiquidity,
     removeLiquidity,
+    mintTestTokens
   };
 };
 

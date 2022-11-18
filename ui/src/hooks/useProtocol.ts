@@ -2,7 +2,7 @@ import React from "react";
 import { ethers } from "ethers";
 
 import config, { type Chain } from "../config";
-import ERC20Abi from "../abi/ERC20.json";
+import ERC20Abi from "../abi/TestBridgedToken.json";
 import LiquidityPoolAbi from "../abi/LiquidityPool.json";
 import { LiquidityPool } from "../abi/LiquidityPool";
 
@@ -14,6 +14,7 @@ export type UseProtocol = {
   addLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
   removeLiquidity: (tokenAddress: string, amount: string) => Promise<void>;
   getLiquidityOfUser: (user: string, token: string) => Promise<any>;
+  mintTokens: (token: string, to: string, amount: number) => Promise<void>;
 };
 const useProtocol = ({
   chain,
@@ -25,7 +26,7 @@ const useProtocol = ({
   const LIQUIDITY_POOL_ADDRESS = config.contracts[chain.chainId].LIQUIDITY_POOL;
 
   const _getERC20Contract = (tokenAddress: string) =>
-    new ethers.Contract(tokenAddress, ERC20Abi, provider.getSigner());
+    new ethers.Contract(tokenAddress, ERC20Abi.abi, provider.getSigner());
 
   const _getLiquidityPoolContract = (): LiquidityPool =>
     new ethers.Contract(
@@ -101,11 +102,16 @@ const useProtocol = ({
     return _getLiquidityPoolContract().getLiquidityOfUser(user, token);
   };
 
+  const mintTokens = async (token: string, to: string, amount: number) => {
+    await _getERC20Contract(token).mint(to, ethers.utils.parseEther(amount.toString()));
+  }
+
   return {
     addLiquidity,
     removeLiquidity,
     getLiquidityOfUser,
     getTokenBalanceOfUser,
+    mintTokens
   };
 };
 

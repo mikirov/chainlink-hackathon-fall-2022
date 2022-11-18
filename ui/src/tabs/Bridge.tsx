@@ -56,7 +56,7 @@ const Bridge: React.FunctionComponent<BridgeProps> = ({ web3 }) => {
       <Box p="6">
         <Flex justifyContent="space-between">
           <Text>Amount</Text>
-          <Text>Balance: 10</Text>
+          <Text>Balance: 95190</Text>
         </Flex>
         <Flex justifyContent="space-between" py="1">
           <InputGroup size="md" flex="1">

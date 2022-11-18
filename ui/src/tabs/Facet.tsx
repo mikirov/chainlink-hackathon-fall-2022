@@ -5,63 +5,59 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import shallow from "zustand/shallow";
 import Dropdown from "../components/Dropdown";
 import PrimaryButton from "../components/PrimaryButton";
 import config from "../config";
+import useNotification from "../hooks/useNotification";
 import { UseWeb3 } from "../hooks/useWeb3";
+import useProtocolStore from "../store";
 
 type FacetProps = {
   web3: UseWeb3;
 };
 const Facet: React.FunctionComponent<FacetProps> = ({ web3 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const [tokenBalance, tokenBalanceLoading] = useProtocolStore(
+    (state) => [state.tokenBalance, state.tokenBalanceLoading],
+    shallow
+  );
+
+  const { showError, showSuccess } = useNotification();
   return (
     <Flex
       flexDirection="column"
       justifyContent="center"
       alignItems="flex-start"
     >
-      <Text>Get fee test tokens</Text>
-      <Flex justifyContent="space-between" py="1" width="full">
-        <InputGroup size="md" flex="1">
-          <Input
-            type="number"
-            min={0}
-            placeholder="0.0"
-            // value={tokenBalanceInput}
-            // onChange={(e) => setTokenBalanceInput(e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              h="1.75rem"
-              size="sm"
-              //   onClick={() =>
-              //     setTokenBalanceInput(Number(tokenLiquidityOfUser).toString())
-              //   }
-            >
-              MAX
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <Box ml="2">
-          <Dropdown
-            items={config.tokens[web3.chain.chainId]}
-            defaultSelected={config.tokens[web3.chain.chainId][0]}
-            // onItemChange={(item) => setToken(item)}
-          />
-        </Box>
+      <Text>Get free test tokens</Text>
+      <Flex alignItems="center">
+        <Text>Balance: {tokenBalance}</Text>
+        {tokenBalanceLoading ? <Spinner size="xs" ml="2" /> : null}
       </Flex>
       <PrimaryButton
         mt={4}
         width="full"
-        // isLoading={addLiquidityLoading}
-        loadingText="Adding liquidity..."
-        // disabled={addLiquidityLoading || tokenBalanceInputError}
-        // onClick={addLiquidity}
+        isLoading={loading}
+        loadingText="Sending tokens..."
+        disabled={loading}
+        onClick={async () => {
+          setLoading(true);
+
+          await web3
+            .mintTestTokens(1000)
+            .then(() => web3.fetchTokenBalance())
+            .then(() => showSuccess(`You have received 1000 tokens`))
+            .catch((error) => showError(error.reason))
+            .finally(() => setLoading(false));
+        }}
       >
-        Receive tokens
+        Receive 1000 tokens
       </PrimaryButton>
     </Flex>
   );

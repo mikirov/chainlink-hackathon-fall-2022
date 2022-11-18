@@ -1,246 +1,55 @@
-# Forge Standard Library • [![tests](https://github.com/brockelmore/forge-std/actions/workflows/tests.yml/badge.svg)](https://github.com/brockelmore/forge-std/actions/workflows/tests.yml)
+# TheBridge
 
-Forge Standard Library is a collection of helpful contracts for use with [`forge` and `foundry`](https://github.com/foundry-rs/foundry). It leverages `forge`'s cheatcodes to make writing tests easier and faster, while improving the UX of cheatcodes.
+Decentralized cross-chain bridge between Ethereum and Polygon. 
 
-**Learn how to use Forge Std with the [📖 Foundry Book (Forge Std Guide)](https://book.getfoundry.sh/forge/forge-std.html).**
+**The problem** - The main problem with most bridges nowadays is that they are:
+1 ) Centralized
+2 ) Lack of liquidity
 
-## Install
+**Our solution**
+1 ) Decentralization - We are using the Polygon tunnels to communicate between both chains. These tunnels are periodically observed by the Polygon validator nodes and synced automatically(every ~20-30 min) using "State Sync".
 
-```bash
-forge install foundry-rs/forge-std
+2 ) Liquidity - To incentivize users to provide liquidity, the bridge has a fee of 0.1% per each token bridge. We are using "Discrete Staking Mechanism" to  distribute rewards fairly to all liquidity providers pro-rata of their stake.
+
+The bridge has 2 types of users:
+- **Liquidity Providers** - The ones that are providing liquidity to the pools, so the bridge users can bridge tokens between both chains. We support multiple tokens, controlled by TokenMapping contract which ensures the token is supported from the bridge and associated with the coresponding token address of the destination chain. Liquidity providers can earn 0.1% fee per each token bridge based on their proportion of the total stake. More token bridges, more fees, more rewards for the providers.
+
+- **Bridge Users** - The ones that are using the bridge to transfer tokens between both chains. They rely on the Liquidity Providers to supply tokens on both chains, so they can use them. Per each token bridge, they will receive 0.1% less than the bridged amount. The deducted fee is distributed to all the LPs.
+
+
+Right now the bridge is working only Ethereum -> Polygon. There is a problem with the generated proof by maticjs library and it cannot be processed by the Ethereum tunnel. We are still trying to resolve it. 
+
+# Setup and Install
+
+`$ git clone https://github.com/mikirov/chainlink-hackathon-fall-2022`
+`$ cd /ui`
+`$ npm install`
+`$ npm start`
+
+# Deployments
+
+```
+Ethereum Token deployed to: 0x011C1B8a25e4f309e78f717cF021939c4b5f2E6F
+Ethereum Tunnel deployed to:  0x5CbBC6C5A5cC4e9B9bc4b0bEc8eCE75B59290d37
+Ethereum Pool deployed to:  0xa0EA167a5163634Fb016743E4f34e0a7B728D50b
+Ethereum Token Mapping deployed to:  0xc98E165f0B20E3E296B723276966547A104d4e65
+Ethereum Bridge Proxy deployed to: 0xB370736D491294D183E4aFf5b7ccd30289bB3d54
+**
+Polygon Tunnel deployed to:  0x456dE776A554c221b516874500c65078EB4C2c2f
+Polygon Pool deployed to:  0x11f3D2df3082D52d20A3a1633C34a25338D1C56c
+Polygon Token Mapping deployed to:  0xaD694E24cF980934dA88C5d4E05c0cCffaA7706d
+Polygon Bridge Proxy deployed to: 0x595D8B115eAC4F56EAd6BBd2914d7556F238A0e9
+Polygon Token deployed to: 0x565A39628964995F1D74502d03838b42E280b18b
+
 ```
 
-## Contracts
-### stdError
+# Functionalities
 
-This is a helper contract for errors and reverts. In `forge`, this contract is particularly helpful for the `expectRevert` cheatcode, as it provides all compiler builtin errors.
-
-See the contract itself for all error codes.
-
-#### Example usage
-
-```solidity
-
-import "forge-std/Test.sol";
-
-contract TestContract is Test {
-    ErrorsTest test;
-
-    function setUp() public {
-        test = new ErrorsTest();
-    }
-
-    function testExpectArithmetic() public {
-        vm.expectRevert(stdError.arithmeticError);
-        test.arithmeticError(10);
-    }
-}
-
-contract ErrorsTest {
-    function arithmeticError(uint256 a) public {
-        uint256 a = a - 100;
-    }
-}
-```
-
-### stdStorage
-
-This is a rather large contract due to all of the overloading to make the UX decent. Primarily, it is a wrapper around the `record` and `accesses` cheatcodes. It can *always* find and write the storage slot(s) associated with a particular variable without knowing the storage layout. The one _major_ caveat to this is while a slot can be found for packed storage variables, we can't write to that variable safely. If a user tries to write to a packed slot, the execution throws an error, unless it is uninitialized (`bytes32(0)`).
-
-This works by recording all `SLOAD`s and `SSTORE`s during a function call. If there is a single slot read or written to, it immediately returns the slot. Otherwise, behind the scenes, we iterate through and check each one (assuming the user passed in a `depth` parameter). If the variable is a struct, you can pass in a `depth` parameter which is basically the field depth.
-
-I.e.:
-```solidity
-struct T {
-    // depth 0
-    uint256 a;
-    // depth 1
-    uint256 b;
-}
-```
-
-#### Example usage
-
-```solidity
-import "forge-std/Test.sol";
-
-contract TestContract is Test {
-    using stdStorage for StdStorage;
-
-    Storage test;
-
-    function setUp() public {
-        test = new Storage();
-    }
-
-    function testFindExists() public {
-        // Lets say we want to find the slot for the public
-        // variable `exists`. We just pass in the function selector
-        // to the `find` command
-        uint256 slot = stdstore.target(address(test)).sig("exists()").find();
-        assertEq(slot, 0);
-    }
-
-    function testWriteExists() public {
-        // Lets say we want to write to the slot for the public
-        // variable `exists`. We just pass in the function selector
-        // to the `checked_write` command
-        stdstore.target(address(test)).sig("exists()").checked_write(100);
-        assertEq(test.exists(), 100);
-    }
-
-    // It supports arbitrary storage layouts, like assembly based storage locations
-    function testFindHidden() public {
-        // `hidden` is a random hash of a bytes, iteration through slots would
-        // not find it. Our mechanism does
-        // Also, you can use the selector instead of a string
-        uint256 slot = stdstore.target(address(test)).sig(test.hidden.selector).find();
-        assertEq(slot, uint256(keccak256("my.random.var")));
-    }
-
-    // If targeting a mapping, you have to pass in the keys necessary to perform the find
-    // i.e.:
-    function testFindMapping() public {
-        uint256 slot = stdstore
-            .target(address(test))
-            .sig(test.map_addr.selector)
-            .with_key(address(this))
-            .find();
-        // in the `Storage` constructor, we wrote that this address' value was 1 in the map
-        // so when we load the slot, we expect it to be 1
-        assertEq(uint(vm.load(address(test), bytes32(slot))), 1);
-    }
-
-    // If the target is a struct, you can specify the field depth:
-    function testFindStruct() public {
-        // NOTE: see the depth parameter - 0 means 0th field, 1 means 1st field, etc.
-        uint256 slot_for_a_field = stdstore
-            .target(address(test))
-            .sig(test.basicStruct.selector)
-            .depth(0)
-            .find();
-
-        uint256 slot_for_b_field = stdstore
-            .target(address(test))
-            .sig(test.basicStruct.selector)
-            .depth(1)
-            .find();
-
-        assertEq(uint(vm.load(address(test), bytes32(slot_for_a_field))), 1);
-        assertEq(uint(vm.load(address(test), bytes32(slot_for_b_field))), 2);
-    }
-}
-
-// A complex storage contract
-contract Storage {
-    struct UnpackedStruct {
-        uint256 a;
-        uint256 b;
-    }
-
-    constructor() {
-        map_addr[msg.sender] = 1;
-    }
-
-    uint256 public exists = 1;
-    mapping(address => uint256) public map_addr;
-    // mapping(address => Packed) public map_packed;
-    mapping(address => UnpackedStruct) public map_struct;
-    mapping(address => mapping(address => uint256)) public deep_map;
-    mapping(address => mapping(address => UnpackedStruct)) public deep_map_struct;
-    UnpackedStruct public basicStruct = UnpackedStruct({
-        a: 1,
-        b: 2
-    });
-
-    function hidden() public view returns (bytes32 t) {
-        // an extremely hidden storage slot
-        bytes32 slot = keccak256("my.random.var");
-        assembly {
-            t := sload(slot)
-        }
-    }
-}
-```
-
-### stdCheats
-
-This is a wrapper over miscellaneous cheatcodes that need wrappers to be more dev friendly. Currently there are only functions related to `prank`. In general, users may expect ETH to be put into an address on `prank`, but this is not the case for safety reasons. Explicitly this `hoax` function should only be used for address that have expected balances as it will get overwritten. If an address already has ETH, you should just use `prank`. If you want to change that balance explicitly, just use `deal`. If you want to do both, `hoax` is also right for you.
-
-
-#### Example usage:
-```solidity
-
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "forge-std/Test.sol";
-
-// Inherit the stdCheats
-contract StdCheatsTest is Test {
-    Bar test;
-    function setUp() public {
-        test = new Bar();
-    }
-
-    function testHoax() public {
-        // we call `hoax`, which gives the target address
-        // eth and then calls `prank`
-        hoax(address(1337));
-        test.bar{value: 100}(address(1337));
-
-        // overloaded to allow you to specify how much eth to
-        // initialize the address with
-        hoax(address(1337), 1);
-        test.bar{value: 1}(address(1337));
-    }
-
-    function testStartHoax() public {
-        // we call `startHoax`, which gives the target address
-        // eth and then calls `startPrank`
-        //
-        // it is also overloaded so that you can specify an eth amount
-        startHoax(address(1337));
-        test.bar{value: 100}(address(1337));
-        test.bar{value: 100}(address(1337));
-        vm.stopPrank();
-        test.bar(address(this));
-    }
-}
-
-contract Bar {
-    function bar(address expectedSender) public payable {
-        require(msg.sender == expectedSender, "!prank");
-    }
-}
-```
-
-### Std Assertions
-
-Expand upon the assertion functions from the `DSTest` library.
-
-### `console.log`
-
-Usage follows the same format as [Hardhat](https://hardhat.org/hardhat-network/reference/#console-log).
-It's recommended to use `console2.sol` as shown below, as this will show the decoded logs in Forge traces.
-
-```solidity
-// import it indirectly via Test.sol
-import "forge-std/Test.sol";
-// or directly import it
-import "forge-std/console2.sol";
-...
-console2.log(someValue);
-```
-
-If you need compatibility with Hardhat, you must use the standard `console.sol` instead.
-Due to a bug in `console.sol`, logs that use `uint256` or `int256` types will not be properly decoded in Forge traces.
-
-```solidity
-// import it indirectly via Test.sol
-import "forge-std/Test.sol";
-// or directly import it
-import "forge-std/console.sol";
-...
-console.log(someValue);
-```
+- Go to Facet tab and get some free tokens
+![](/docs/facet.png)
+- Add Liquidity
+![](/docs/add-liquidity.png)
+- Remove Liquidity
+![](/docs/remove-liquidity.png)
+- Bridge tokens(WIP)
+![](/docs/bridge.png)
