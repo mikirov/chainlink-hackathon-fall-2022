@@ -24,11 +24,12 @@ Right now the bridge is working only Ethereum -> Polygon. There is a problem wit
 
 # Setup and Install
 
-`$ git clone https://github.com/mikirov/chainlink-hackathon-fall-2022`
-`$ cd /ui`
-`$ npm install`
-`$ npm start`
-
+```
+$ git clone https://github.com/mikirov/chainlink-hackathon-fall-2022
+$ cd /ui
+$ npm install
+$ npm start
+```
 # Deployments
 
 ```
