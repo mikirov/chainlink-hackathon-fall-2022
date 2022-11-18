@@ -5,6 +5,7 @@ Decentralized cross-chain bridge between Ethereum and Polygon.
 **The problem** - The main problem with most bridges nowadays is that they are:
 
 1 ) Centralized
+
 2 ) Lack of liquidity
 
 **Our solution**
