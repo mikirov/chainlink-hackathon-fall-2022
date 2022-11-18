@@ -48,7 +48,7 @@ Token deployed to: 0x565A39628964995F1D74502d03838b42E280b18b
 
 # Functionalities
 
-- Go to Facet tab and get some free tokens
+- Get free tokens to test out the bridge
 ![](/docs/facet.png)
 - Add Liquidity
 ![](/docs/add-liquidity.png)
